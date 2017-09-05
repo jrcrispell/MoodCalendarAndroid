@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.wordpress.jrcrispell.moodcalendar.MainActivity"
+    android:background="@drawable/background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/previousDayButton"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/left_arrow"
+            android:layout_marginRight="15dp"
+            android:background="@null"/>
+
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_gravity="center_vertical"
+            style="@style/HeaderText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MAY 27, 2017" />
+
+        <ImageButton
+            android:id="@+id/nextDayButton"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_arrow"
+            android:layout_marginLeft="15dp"
+            android:background="@null"/>
+
+
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/DayCalendarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.wordpress.jrcrispell.moodcalendar.DayCalendarFragment"/>
+
+</LinearLayout>
