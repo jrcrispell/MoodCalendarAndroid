@@ -37,12 +37,16 @@ public class MainActivity extends AppCompatActivity {
         currentInstance = Calendar.getInstance();
         todaysDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
 
-        eventDBHelper = new EventDBSQLiteHelper(this);
+        eventDBHelper = EventDBSQLiteHelper.getInstance(this);
+
+        //eventDBHelper.addEvent(new CalendarEvent(8, 2, "Testing db", 9, todaysDate));
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         configureButtons();
+
     }
 
     @Override
