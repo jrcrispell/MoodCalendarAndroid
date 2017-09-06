@@ -1,9 +1,10 @@
 package com.wordpress.jrcrispell.moodcalendar;
 
+import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,20 +22,44 @@ public class DayCalendarFragment extends Fragment {
     int hourLineTopPadding;
     String todaysDateString;
 
+    DayCalendarFragmentListener listener;
+
     ArrayList<CalendarEvent> daysEvents;
     EventDBSQLiteHelper eventDBHelper;
 
     boolean longClickDetected = false;
 
+    interface DayCalendarFragmentListener {
+        void openLoggerActivity(Intent intent);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof DayCalendarFragmentListener) {
+            listener = (DayCalendarFragmentListener) context;
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        eventDBHelper = EventDBSQLiteHelper.getInstance(getActivity());
+    }
+
+    public static DayCalendarFragment newInstance() {
+        return new DayCalendarFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return getDayCalendarView();
+    }
 
-        eventDBHelper = EventDBSQLiteHelper.getInstance(getActivity());
-
+    private View getDayCalendarView() {
         MainActivity mainActivity = (MainActivity) getActivity();
         todaysDateString = mainActivity.todaysDate;
-        Log.d("debug", todaysDateString);
 
         daysEvents = eventDBHelper.getDaysEvents(todaysDateString);
 
@@ -44,7 +69,9 @@ public class DayCalendarFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                if (event.getAction() != 1 || event.getX() < 163) {
+                DayCalendarView dcView = (DayCalendarView) v;
+
+                if (event.getAction() != 1 || event.getX() < dcView.hourLabelXStart) {
                     return false;
                 }
 
@@ -55,7 +82,8 @@ public class DayCalendarFragment extends Fragment {
 
                     Intent intent = new Intent(getActivity(), DisplayLoggerActivity.class);
                     intent.putExtra("startHour", sendStartHour);
-                    startActivity(intent);
+                    intent.putExtra("startDay", todaysDateString);
+                    listener.openLoggerActivity(intent);
                     return true;
                 }
 

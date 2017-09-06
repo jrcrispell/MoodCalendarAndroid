@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.wordpress.jrcrispell.moodcalendar.DisplayLoggerActivity"
-    android:background="@drawable/background">
+    android:background="@mipmap/background"
+    android:fitsSystemWindows="true"
+    >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -14,6 +16,7 @@
 
             <LinearLayout
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -54,6 +57,8 @@
                 android:textSize="26sp" />
 
             <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="to"
@@ -64,6 +69,7 @@
 
             <LinearLayout
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -103,6 +109,27 @@
                 android:textColor="@color/brightWhite"
                 android:textSize="26sp" />
 
+            <EditText
+                android:layout_marginBottom="10dp"
+                android:id="@+id/descriptionET"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/activity_description"
+                android:textColorHint="@color/white80Percent"
+                android:textColor="@color/brightWhite"
+                android:padding="12dp"
+                android:textAlignment="center"
+                android:layout_gravity="center_horizontal"/>
+
+
+            <TextView
+                android:id="@+id/moodTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightWhite"
+                android:textSize="32sp"
+                android:text="@string/_5"/>
 
             <LinearLayout
                 android:layout_gravity="center_horizontal"
@@ -110,20 +137,19 @@
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/save_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/save"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="32dp"/>
 
                 <Button
                     android:id="@+id/cancel_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/cancel"/>
+                    style="@style/Widget.AppCompat.Button.Borderless.NavigationButton"
+                    android:layout_marginEnd="32dp"
+                    android:text="@string/cancel" />
+
+                <Button
+                    android:id="@+id/save_button"
+                    style="@style/Widget.AppCompat.Button.Borderless.NavigationButton"
+                    android:text="@string/save" />
+
+
             </LinearLayout>
 
         </LinearLayout>

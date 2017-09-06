@@ -6,11 +6,12 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
-
-//TODO - have a stand-in message when no contacts are added "tap screen to blah"
 
 public class DayCalendarView extends View {
 
@@ -148,5 +149,38 @@ public class DayCalendarView extends View {
             canvas.drawText(hour, hourLabelXStart, (i * hourVerticalPoints) + hourLabelYStart, textPaint);
         }
 
+    }
+
+    private int measureDimension(int desiredSize, int measureSpec) {
+        int result;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+
+        if (specMode == MeasureSpec.EXACTLY) {
+            result = specSize;
+        } else {
+            result = desiredSize;
+            if (specMode == MeasureSpec.AT_MOST) {
+                result = Math.min(result, specSize);
+            }
+        }
+
+        if (result < desiredSize){
+            Log.e("ChartView", "The view is too small, the content might get cut");
+        }
+        return result;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int desiredWidth = getSuggestedMinimumWidth() + getPaddingLeft() + getPaddingRight();
+        int desiredHeight = getSuggestedMinimumHeight() + getPaddingTop() + getPaddingBottom();
+
+        //setMeasuredDimension(measureDimension(desiredWidth, widthMeasureSpec),
+        //        measureDimension(desiredHeight, heightMeasureSpec));
+
+        setMeasuredDimension(2000,
+                2000);
     }
 }

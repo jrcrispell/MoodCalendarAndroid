@@ -2,4 +2,7 @@
     <string name="app_name">Mood Calendar</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="activity_description">Activity Description</string>
+    <string name="_5">5</string>
+    <string name="select_mood">Select a mood, 10 being the highest</string>
 </resources>

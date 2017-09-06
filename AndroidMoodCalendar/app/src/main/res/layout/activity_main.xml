@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.wordpress.jrcrispell.moodcalendar.MainActivity"
-    android:background="@drawable/background"
+    android:background="@mipmap/background"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -45,10 +45,16 @@
 
     </LinearLayout>
 
-    <fragment
-        android:id="@+id/DayCalendarFragment"
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.wordpress.jrcrispell.moodcalendar.DayCalendarFragment"/>
+        android:layout_height="match_parent">
+
+<FrameLayout
+    android:id="@+id/dayCalendarFragmentContainer"
+    android:layout_width="match_parent"
+    android:layout_height="3000dp"/>
+
+    </ScrollView>
 
 </LinearLayout>

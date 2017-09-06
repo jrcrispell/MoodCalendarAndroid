@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.database.sqlite.SQLiteDatabase;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -14,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DayCalendarFragment.DayCalendarFragmentListener {
 
     public EventDBSQLiteHelper eventDBHelper;
     String todaysDate;
@@ -46,17 +47,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         configureButtons();
+        getFragmentManager().beginTransaction().add(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     @Override
     protected void onRestart() {
         super.onRestart();
+        getFragmentManager().beginTransaction().replace(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();
     }
 
     @Override
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 currentInstance.add(Calendar.DATE, -1);
-                calendarFragment = (DayCalendarFragment) getSupportFragmentManager().findFragmentById(R.id.DayCalendarFragment);
+                calendarFragment = (DayCalendarFragment) getFragmentManager().findFragmentById(R.id.dayCalendarFragmentContainer);
                 calendarView = (DayCalendarView) calendarFragment.getView();
 
                 String newDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 currentInstance.add(Calendar.DATE, 1);
-                calendarFragment = (DayCalendarFragment) getSupportFragmentManager().findFragmentById(R.id.DayCalendarFragment);
+                calendarFragment = (DayCalendarFragment) getFragmentManager().findFragmentById(R.id.dayCalendarFragmentContainer);
                 calendarView = (DayCalendarView) calendarFragment.getView();
 
                 String newDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
@@ -152,4 +151,10 @@ public class MainActivity extends AppCompatActivity {
         }
         return month + " " + day + ", " + dateArray[2];
     }
+
+    @Override
+    public void openLoggerActivity(Intent intent) {
+        startActivity(intent);
+    }
+
 }
