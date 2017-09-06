@@ -79,6 +79,8 @@ public class DisplayLoggerActivity extends AppCompatActivity {
         startTime.setText(String.format(locale, "%02d:%02d", incomingStartTime, 0));
 
 
+
+        //TODO - fix bug where popup dialog doesn't update after a time has been picked.
         startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +92,8 @@ public class DisplayLoggerActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         startTime.setText(String.format(locale, "%02d:%02d", hourOfDay, minute));
-                        setStartDouble(hourOfDay + minute/60);
+                        double decimal = ((double) minute/60);
+                        setStartDouble(hourOfDay + decimal);
                     }
                 }, incomingStartTime, startMin, false);
                 timePicker.setTitle("Select Time");
@@ -112,7 +115,8 @@ public class DisplayLoggerActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         endTime.setText(String.format(locale, "%02d:%02d", hourOfDay, minute));
-                        setEndDouble(hourOfDay + minute/60);
+                        double decimal = ((double) minute/60);
+                        setEndDouble(hourOfDay + decimal);
                     }
                 }, incomingStartTime + 1, startMin, false);
                 timePicker.setTitle("Select Time");
@@ -139,7 +143,7 @@ public class DisplayLoggerActivity extends AppCompatActivity {
                 .setItems(R.array.mood_array, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int index) {
-                        moodTV.setText(Integer.toString(index + 1));
+                        moodTV.setText(" " + Integer.toString(index + 1) + " ");
                     }
                 });
                 builder.show();
@@ -156,7 +160,12 @@ public class DisplayLoggerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                dbHelper.addEvent(new CalendarEvent(startDouble, endDouble - startDouble, descriptionET.getText().toString(), Integer.parseInt(moodTV.getText().toString()), startDay));
+                // The string resource file has a space before and after the mood score to increase
+                // hitbox of the mood.
+                String trimmedMood = moodTV.getText().toString().replace(" ", "");
+                int mood = Integer.parseInt(trimmedMood);
+
+                dbHelper.addEvent(new CalendarEvent(startDouble, endDouble - startDouble, descriptionET.getText().toString(), mood, startDay));
                 finish();
             }
         });
