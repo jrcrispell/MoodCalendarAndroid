@@ -59,7 +59,7 @@ public class DayCalendarFragment extends Fragment {
 
     private View getDayCalendarView() {
         MainActivity mainActivity = (MainActivity) getActivity();
-        todaysDateString = mainActivity.todaysDate;
+        todaysDateString = mainActivity.selectedDate;
 
         daysEvents = eventDBHelper.getDaysEvents(todaysDateString);
 

@@ -59,6 +59,8 @@ public class DisplayLoggerActivity extends AppCompatActivity {
         dbHelper = EventDBSQLiteHelper.getInstance(this);
 
 
+
+
         endTime = (TextView) findViewById(R.id.endTimeTV);
 
         Bundle extras = getIntent().getExtras();
@@ -66,13 +68,15 @@ public class DisplayLoggerActivity extends AppCompatActivity {
         incomingStartTime = (int) extras.getDouble("startHour");
         startDay = extras.getString("startDay");
 
+        final TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
+        dateTextView.setText(MainActivity.convertDateString(startDay));
+
         startDouble = incomingStartTime;
         endDouble = incomingStartTime + 1;
 
-        Format timeFormat = new SimpleDateFormat("hh:mm");
         startTime = (TextView) findViewById(R.id.startTimeTV);
 
-        startTime.setText(incomingStartTime + ":00");
+        startTime.setText(String.format(locale, "%02d:%02d", incomingStartTime, 0));
 
 
         startTime.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +99,7 @@ public class DisplayLoggerActivity extends AppCompatActivity {
             }
         });
 
-        endTime.setText(incomingStartTime + 1 + ":00");
+        endTime.setText(String.format(locale, "%02d:%02d", incomingStartTime + 1, 0));
 
         endTime.setOnClickListener(new View.OnClickListener() {
             @Override

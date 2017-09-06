@@ -18,11 +18,11 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements DayCalendarFragment.DayCalendarFragmentListener {
 
     public EventDBSQLiteHelper eventDBHelper;
-    String todaysDate;
     Calendar currentInstance;
     DayCalendarFragment calendarFragment;
     DayCalendarView calendarView;
     Locale locale;
+    String selectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +36,9 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
         }
 
         currentInstance = Calendar.getInstance();
-        todaysDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
+        selectedDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
 
         eventDBHelper = EventDBSQLiteHelper.getInstance(this);
-
-        //eventDBHelper.addEvent(new CalendarEvent(8, 2, "Testing db", 9, todaysDate));
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -66,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     private void configureButtons(){
 
         final TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
-        dateTextView.setText(convertDateString(todaysDate));
+        dateTextView.setText(convertDateString(selectedDate));
 
         ImageButton previousDayButton = (ImageButton) findViewById(R.id.previousDayButton);
         previousDayButton.setOnClickListener(new View.OnClickListener() {
@@ -76,9 +73,9 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
                 calendarFragment = (DayCalendarFragment) getFragmentManager().findFragmentById(R.id.dayCalendarFragmentContainer);
                 calendarView = (DayCalendarView) calendarFragment.getView();
 
-                String newDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
-                dateTextView.setText(convertDateString(newDate));
-                calendarView.daysEvents = eventDBHelper.getDaysEvents(newDate);
+                selectedDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
+                dateTextView.setText(convertDateString(selectedDate));
+                calendarView.daysEvents = eventDBHelper.getDaysEvents(selectedDate);
                 calendarView.invalidate();
             }
         });
@@ -91,15 +88,15 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
                 calendarFragment = (DayCalendarFragment) getFragmentManager().findFragmentById(R.id.dayCalendarFragmentContainer);
                 calendarView = (DayCalendarView) calendarFragment.getView();
 
-                String newDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
-                dateTextView.setText(convertDateString(newDate));
-                calendarView.daysEvents = eventDBHelper.getDaysEvents(newDate);
+                selectedDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
+                dateTextView.setText(convertDateString(selectedDate));
+                calendarView.daysEvents = eventDBHelper.getDaysEvents(selectedDate);
                 calendarView.invalidate();
             }
         });
     }
 
-    private String convertDateString(String date) {
+    public static String convertDateString(String date) {
         String[] dateArray = date.split("-");
         String month;
 
