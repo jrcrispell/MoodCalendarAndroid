@@ -14,20 +14,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:id="@+id/dateTextView"
-                    android:layout_gravity="center_horizontal"
-                    style="@style/HeaderText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="    MAY 27, 2017    " />
-
-
-
-
             <TextView
                 android:id="@+id/startTimeTV"
                 android:layout_width="wrap_content"

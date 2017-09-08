@@ -70,8 +70,6 @@ public class DisplayLoggerActivity extends AppCompatActivity {
         incomingStartTime = (int) extras.getDouble("startHour");
         startDay = extras.getString("startDay");
 
-        final TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
-        dateTextView.setText(MainActivity.convertDateString(startDay));
 
         startDouble = incomingStartTime;
         endDouble = incomingStartTime + 1;
@@ -80,9 +78,6 @@ public class DisplayLoggerActivity extends AppCompatActivity {
 
         startTime.setText(String.format(locale, "%02d:%02d", incomingStartTime, 0));
 
-//        intent.putExtra("editingExistingEvent", true);
-//        intent.putExtra("eventID", calendarEvent.getDbEventID());
-//        listener.openLoggerActivity(intent);
 
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -90,6 +85,8 @@ public class DisplayLoggerActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setCustomView(R.layout.logger_action_bar);
+        TextView dateTV = (TextView) getSupportActionBar().getCustomView().findViewById(R.id.dateTextView);
+        dateTV.setText(MainActivity.convertDateString(startDay));
         editingExisting = extras.getBoolean("editingExistingEvent");
 
         ImageButton deleteButton = (ImageButton) findViewById(R.id.delete_button);
@@ -97,6 +94,9 @@ public class DisplayLoggerActivity extends AppCompatActivity {
         if (editingExisting) {
             editingId = extras.getInt("eventID");
             deleteButton.setVisibility(View.VISIBLE);
+            //TODO - prepopulate with event data
+
+            //TODO - load correct day in action bar TV
         }
 
         deleteButton.setOnClickListener(new View.OnClickListener() {

@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
                 selectedDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
                 dateTextView.setText(convertDateString(selectedDate));
+
                 calendarView.daysEvents = eventDBHelper.getDaysEvents(selectedDate);
                 calendarView.invalidate();
             }
