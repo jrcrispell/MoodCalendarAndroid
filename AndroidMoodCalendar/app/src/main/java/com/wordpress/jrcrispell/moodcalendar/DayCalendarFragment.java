@@ -24,13 +24,14 @@ public class DayCalendarFragment extends Fragment {
 
     DayCalendarFragmentListener listener;
 
-    ArrayList<CalendarEvent> daysEvents;
     EventDBSQLiteHelper eventDBHelper;
 
     boolean longClickDetected = false;
 
     interface DayCalendarFragmentListener {
         void openLoggerActivity(Intent intent);
+        ArrayList<CalendarEvent> getDaysEvents();
+        void setDaysEvents(ArrayList<CalendarEvent> daysEvents);
     }
 
     @Override
@@ -61,10 +62,10 @@ public class DayCalendarFragment extends Fragment {
         MainActivity mainActivity = (MainActivity) getActivity();
         todaysDateString = mainActivity.selectedDate;
 
-        daysEvents = eventDBHelper.getDaysEvents(todaysDateString);
+        listener.setDaysEvents(eventDBHelper.getDaysEvents(todaysDateString));
 
         // Calendar touch event
-        final DayCalendarView dayCalendarView = new DayCalendarView(getActivity(), daysEvents);
+        final DayCalendarView dayCalendarView = new DayCalendarView(getActivity());
         dayCalendarView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -81,8 +82,8 @@ public class DayCalendarFragment extends Fragment {
                     hourLineTopPadding = dayCalendarView.hourLineTopPadding;
                     sendStartHour = (event.getY() - hourLineTopPadding) / hourVerticalPoints;
 
-                    for (int i=0; i < daysEvents.size(); i++) {
-                        CalendarEvent calendarEvent = daysEvents.get(i);
+                    for (int i=0; i < listener.getDaysEvents().size(); i++) {
+                        CalendarEvent calendarEvent = listener.getDaysEvents().get(i);
                         if (calendarEvent.getStartTime() <= sendStartHour && sendStartHour <= calendarEvent.getStartTime() + calendarEvent.getDuration()) {
                             Intent intent = new Intent(getActivity(), DisplayLoggerActivity.class);
                             intent.putExtra("startHour", sendStartHour);
@@ -123,6 +124,7 @@ public class DayCalendarFragment extends Fragment {
 
         return dayCalendarView;
     }
+
 }
 
 

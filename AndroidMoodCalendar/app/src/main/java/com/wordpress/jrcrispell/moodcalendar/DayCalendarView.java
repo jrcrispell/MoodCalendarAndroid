@@ -35,15 +35,17 @@ public class DayCalendarView extends View {
     ArrayList<Integer> hourLinesToDraw = new ArrayList<>();
     ArrayList<Integer> hourLinesToOmit = new ArrayList<>();
 
-    ArrayList<CalendarEvent> daysEvents;
     Context context;
 
-    public DayCalendarView(Context context, ArrayList<CalendarEvent> daysEvents) {
+    DayCalendarFragment.DayCalendarFragmentListener listener;
+
+    public DayCalendarView(Context context) {
         super(context);
 
-        this.daysEvents = daysEvents;
         this.context = context;
-
+        if (context instanceof DayCalendarFragment.DayCalendarFragmentListener) {
+            listener = (DayCalendarFragment.DayCalendarFragmentListener) context;
+        }
     }
 
     public void drawCalendar() {
@@ -59,8 +61,8 @@ public class DayCalendarView extends View {
             hourLinesToDraw.add(i);
         }
 
-        for (int i=0; i<daysEvents.size(); i++) {
-            CalendarEvent event = daysEvents.get(i);
+        for (int i=0; i<listener.getDaysEvents().size(); i++) {
+            CalendarEvent event = listener.getDaysEvents().get(i);
             int startY = (int) (event.getStartTime() * hourVerticalPoints) + hourLineTopPadding;
             int endY = (int) (event.getDuration() * hourVerticalPoints) + startY;
             eventRectangles.add(new Rect(hourLineXStart, startY, hourLineXEnd, endY));

@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     Locale locale;
     String selectedDate;
     ActionBar actionBar;
+
+    ArrayList<CalendarEvent> daysEvents;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +91,8 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
                 selectedDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
                 dateTextView.setText(convertDateString(selectedDate));
 
-                calendarView.daysEvents = eventDBHelper.getDaysEvents(selectedDate);
-                calendarView.invalidate();
+                daysEvents = eventDBHelper.getDaysEvents(selectedDate);
+                refreshView();
             }
         });
 
@@ -102,8 +106,9 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
                 selectedDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
                 dateTextView.setText(convertDateString(selectedDate));
-                calendarView.daysEvents = eventDBHelper.getDaysEvents(selectedDate);
-                calendarView.invalidate();
+                daysEvents = eventDBHelper.getDaysEvents(selectedDate);
+                refreshView();
+
             }
         });
     }
@@ -166,4 +171,15 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
         startActivity(intent);
     }
 
+    public ArrayList<CalendarEvent> getDaysEvents() {
+        return daysEvents;
+    }
+
+    public void setDaysEvents(ArrayList<CalendarEvent> daysEvents) {
+        this.daysEvents = daysEvents;
+    }
+
+    public void refreshView() {
+        getFragmentManager().beginTransaction().replace(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();
+    }
 }
