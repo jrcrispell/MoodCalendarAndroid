@@ -131,11 +131,24 @@ public class EventDBSQLiteHelper extends SQLiteOpenHelper {
         database.update(CALENDAREVENT_TABLE_NAME, values, CALENDAREVENT_COLUMN_ID + "=" + eventID, null);
     }
 
-    public void addStartDay(CalendarEvent event) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    public CalendarEvent getEvent(int eventID) {
+        String query = "SELECT * FROM " + CALENDAREVENT_TABLE_NAME + " WHERE " + CALENDAREVENT_COLUMN_ID + " = " + eventID;
+        Cursor cursor = database.rawQuery(query, null);
 
-        ContentValues values = new ContentValues();
-        //values.put()
+        if (cursor.moveToFirst()) {
+            CalendarEvent event = new CalendarEvent();
+            event.setStartDay(cursor.getString(1));
+            event.setDbEventID(cursor.getInt(0));
+            event.setStartTime(cursor.getDouble(2));
+            event.setDuration(cursor.getDouble(3));
+            event.setDescription(cursor.getString(4));
+            event.setMoodScore(cursor.getInt(5));
+            cursor.close();
+
+            return event;
+
+        }
+        else return null;
     }
 
     public ArrayList<CalendarEvent> getDaysEvents(String dateString) {
