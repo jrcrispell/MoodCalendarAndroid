@@ -107,7 +107,6 @@ public class EventDBSQLiteHelper extends SQLiteOpenHelper {
 
         query = "SELECT * FROM " + STARTDAY_TABLE_NAME;
         cursor = database.rawQuery(query, null);
-
         if (cursor.moveToFirst()) {
             do {
                 String result = cursor.getString(0) + " " + Integer.toString(cursor.getInt(1));
@@ -116,7 +115,20 @@ public class EventDBSQLiteHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+    }
 
+    public void deleteEvent(int eventID) {
+        database.delete(CALENDAREVENT_TABLE_NAME, CALENDAREVENT_COLUMN_ID + "=" + eventID, null);
+    }
+
+    public void editEvent(CalendarEvent event, int eventID) {
+        ContentValues values = new ContentValues();
+        values.put(CALENDAREVENT_COLUMN_STARTDAY, event.getStartDay());
+        values.put(CALENDAREVENT_COLUMN_STARTTIME, event.getStartTime());
+        values.put(CALENDAREVENT_COLUMN_DURATION, event.getDuration());
+        values.put(CALENDAREVENT_COLUMN_DESCRIPTION, event.getDescription());
+        values.put(CALENDAREVENT_COLUMN_MOODSCORE, event.getMoodScore());
+        database.update(CALENDAREVENT_TABLE_NAME, values, CALENDAREVENT_COLUMN_ID + "=" + eventID, null);
     }
 
     public void addStartDay(CalendarEvent event) {

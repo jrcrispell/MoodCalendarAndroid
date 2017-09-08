@@ -3,6 +3,7 @@ package com.wordpress.jrcrispell.moodcalendar;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,9 +24,12 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     DayCalendarView calendarView;
     Locale locale;
     String selectedDate;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //TODO - fix bug where you can't open an activity after changing the day
 
         // Get today's date
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -42,6 +46,13 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(R.layout.main_action_bar);
+
 
         configureButtons();
         getFragmentManager().beginTransaction().add(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();

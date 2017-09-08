@@ -1,5 +1,6 @@
 package com.wordpress.jrcrispell.moodcalendar;
 
+import android.app.ActionBar;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,10 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -32,6 +35,8 @@ public class DisplayLoggerActivity extends AppCompatActivity {
     double startDouble;
     double endDouble;
     String startDay;
+    boolean editingExisting = false;
+    int editingId = -1;
 
 
     private void setStartDouble(double start) {
@@ -58,9 +63,6 @@ public class DisplayLoggerActivity extends AppCompatActivity {
 
         dbHelper = EventDBSQLiteHelper.getInstance(this);
 
-
-
-
         endTime = (TextView) findViewById(R.id.endTimeTV);
 
         Bundle extras = getIntent().getExtras();
@@ -78,13 +80,53 @@ public class DisplayLoggerActivity extends AppCompatActivity {
 
         startTime.setText(String.format(locale, "%02d:%02d", incomingStartTime, 0));
 
+//        intent.putExtra("editingExistingEvent", true);
+//        intent.putExtra("eventID", calendarEvent.getDbEventID());
+//        listener.openLoggerActivity(intent);
 
+
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.logger_action_bar);
+        editingExisting = extras.getBoolean("editingExistingEvent");
+
+        ImageButton deleteButton = (ImageButton) findViewById(R.id.delete_button);
+
+        if (editingExisting) {
+            editingId = extras.getInt("eventID");
+            deleteButton.setVisibility(View.VISIBLE);
+        }
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(DisplayLoggerActivity.this);
+                builder.setTitle(R.string.confirm_deletion);
+                builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dbHelper.deleteEvent(editingId);
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Do nothing
+                    }
+                });
+                builder.show();
+
+            }
+        });
 
         //TODO - fix bug where popup dialog doesn't update after a time has been picked.
         startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 int startMin = 0;
 
                 TimePickerDialog timePicker;
@@ -165,11 +207,29 @@ public class DisplayLoggerActivity extends AppCompatActivity {
                 String trimmedMood = moodTV.getText().toString().replace(" ", "");
                 int mood = Integer.parseInt(trimmedMood);
 
-                dbHelper.addEvent(new CalendarEvent(startDouble, endDouble - startDouble, descriptionET.getText().toString(), mood, startDay));
+
+                CalendarEvent newEvent = new CalendarEvent(startDouble, endDouble - startDouble, descriptionET.getText().toString(), mood, startDay);
+
+                if (editingExisting) {
+                    dbHelper.editEvent(newEvent, editingId);
+                }
+
+                else {
+                    dbHelper.addEvent(newEvent);
+                }
                 finish();
+
             }
         });
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return true;
+    }
 }

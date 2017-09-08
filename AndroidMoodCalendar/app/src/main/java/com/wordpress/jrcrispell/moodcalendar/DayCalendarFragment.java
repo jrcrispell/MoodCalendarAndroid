@@ -76,13 +76,29 @@ public class DayCalendarFragment extends Fragment {
                 }
 
                 if (!longClickDetected) {
+
                     hourVerticalPoints = dayCalendarView.hourVerticalPoints;
                     hourLineTopPadding = dayCalendarView.hourLineTopPadding;
                     sendStartHour = (event.getY() - hourLineTopPadding) / hourVerticalPoints;
 
+                    for (int i=0; i < daysEvents.size(); i++) {
+                        CalendarEvent calendarEvent = daysEvents.get(i);
+                        if (calendarEvent.getStartTime() <= sendStartHour && sendStartHour <= calendarEvent.getStartTime() + calendarEvent.getDuration()) {
+                            Intent intent = new Intent(getActivity(), DisplayLoggerActivity.class);
+                            intent.putExtra("startHour", sendStartHour);
+                            intent.putExtra("startDay", todaysDateString);
+                            intent.putExtra("editingExistingEvent", true);
+                            intent.putExtra("eventID", calendarEvent.getDbEventID());
+                            listener.openLoggerActivity(intent);
+                            return true;
+                        }
+                    }
+
+
                     Intent intent = new Intent(getActivity(), DisplayLoggerActivity.class);
                     intent.putExtra("startHour", sendStartHour);
                     intent.putExtra("startDay", todaysDateString);
+                    intent.putExtra("editingExistingEvent", false);
                     listener.openLoggerActivity(intent);
                     return true;
                 }
@@ -108,5 +124,6 @@ public class DayCalendarFragment extends Fragment {
         return dayCalendarView;
     }
 }
+
 
 
