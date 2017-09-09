@@ -82,9 +82,9 @@ public class DisplayLoggerActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.logger_action_bar);
+        //getSupportActionBar().setHomeButtonEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.logger_action_bar_2);
         TextView dateTV = (TextView) getSupportActionBar().getCustomView().findViewById(R.id.dateTextView);
         dateTV.setText(MainActivity.convertDateString(startDay));
 
@@ -229,15 +229,15 @@ public class DisplayLoggerActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
+        ImageButton backButton = (ImageButton) findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 onBackPressed();
-        }
-        return true;
+            }
+        });
+
     }
 
     private void validateTimes() {
