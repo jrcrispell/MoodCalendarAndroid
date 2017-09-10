@@ -1,5 +1,6 @@
 package com.wordpress.jrcrispell.moodcalendar;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -32,8 +34,6 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        //TODO - fix bug where you can't open an activity after changing the day
 
         // Get today's date
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -77,8 +77,30 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
     private void configureButtons(){
 
+        final String year = new SimpleDateFormat("yyyy", locale).format(currentInstance.getTime());
+        final String month = new SimpleDateFormat("MM", locale).format(currentInstance.getTime());
+
+        final String day = new SimpleDateFormat("dd", locale).format(currentInstance.getTime());
+
         final TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(convertDateString(selectedDate));
+        dateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DatePickerDialog dialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+
+                    }
+                }, Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
+
+                dialog.show();
+
+
+                //getFragmentManager().beginTransaction().replace(R.id.MonthPickerFragmentContainer, DatePickerFragment.newInstance()).commit();
+            }
+        });
 
         ImageButton previousDayButton = (ImageButton) findViewById(R.id.previousDayButton);
         previousDayButton.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
             }
         });
+
     }
 
     public static String convertDateString(String date) {
@@ -181,5 +204,6 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
     public void refreshView() {
         getFragmentManager().beginTransaction().replace(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();
+        configureButtons();
     }
 }
