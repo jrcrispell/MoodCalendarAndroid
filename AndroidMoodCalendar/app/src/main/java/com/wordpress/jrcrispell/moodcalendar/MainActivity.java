@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.DatePicker;
@@ -90,10 +91,13 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
                 DatePickerDialog dialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        currentInstance.set(year, month, day);
+                        selectedDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
+                        refreshView();
 
                     }
-                }, Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
+                }, Integer.parseInt(year), Integer.parseInt(month)-1, Integer.parseInt(day)); // month is actually zero indexed wtf
 
                 dialog.show();
 
