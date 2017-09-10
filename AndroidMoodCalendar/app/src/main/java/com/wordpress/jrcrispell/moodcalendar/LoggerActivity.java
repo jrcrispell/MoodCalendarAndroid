@@ -2,30 +2,21 @@ package com.wordpress.jrcrispell.moodcalendar;
 
 import android.app.ActionBar;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class DisplayLoggerActivity extends AppCompatActivity {
+public class LoggerActivity extends AppCompatActivity {
 
     private TextView startTime;
     private TextView endTime;
@@ -48,6 +39,7 @@ public class DisplayLoggerActivity extends AppCompatActivity {
         endDouble = end;
     }
 
+//TODO - get rid of military time
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +125,7 @@ public class DisplayLoggerActivity extends AppCompatActivity {
             }
         };
 
-        final TimePickerDialog startTimePicker = new TimePickerDialog(DisplayLoggerActivity.this, startTimeListener, startHourInt, startMinutesInt, false);;
+        final TimePickerDialog startTimePicker = new TimePickerDialog(LoggerActivity.this, startTimeListener, startHourInt, startMinutesInt, false);;
         startTimePicker.setTitle("Select Time");
 
         startTime.setOnClickListener(new View.OnClickListener() {
@@ -154,7 +146,7 @@ public class DisplayLoggerActivity extends AppCompatActivity {
             }
         };
 
-        final TimePickerDialog endTimePicker = new TimePickerDialog(DisplayLoggerActivity.this, endTimeListener, endHourInt, endMinutesInt, false);;
+        final TimePickerDialog endTimePicker = new TimePickerDialog(LoggerActivity.this, endTimeListener, endHourInt, endMinutesInt, false);;
         startTimePicker.setTitle("Select Time");
 
         endTime.setOnClickListener(new View.OnClickListener() {
@@ -168,7 +160,7 @@ public class DisplayLoggerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(DisplayLoggerActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoggerActivity.this);
                 builder.setTitle(R.string.confirm_deletion);
                 builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
@@ -191,7 +183,7 @@ public class DisplayLoggerActivity extends AppCompatActivity {
         moodTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(DisplayLoggerActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoggerActivity.this);
                 builder.setTitle(R.string.select_mood)
                 .setItems(R.array.mood_array, new DialogInterface.OnClickListener() {
                     @Override
@@ -244,7 +236,7 @@ public class DisplayLoggerActivity extends AppCompatActivity {
         ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
 
         if (endDouble <= startDouble) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(DisplayLoggerActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(LoggerActivity.this);
             builder.setTitle("Invalid times");
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override

@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
         final String year = new SimpleDateFormat("yyyy", locale).format(currentInstance.getTime());
         final String month = new SimpleDateFormat("MM", locale).format(currentInstance.getTime());
-
         final String day = new SimpleDateFormat("dd", locale).format(currentInstance.getTime());
 
         final TextView dateTextView = (TextView) findViewById(R.id.dateTextView);

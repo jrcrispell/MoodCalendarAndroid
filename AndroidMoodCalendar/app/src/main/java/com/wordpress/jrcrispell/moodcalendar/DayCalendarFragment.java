@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +20,8 @@ public class DayCalendarFragment extends Fragment {
     int hourVerticalPoints;
     int hourLineTopPadding;
     String todaysDateString;
+
+    boolean editMode = false;
 
     DayCalendarFragmentListener listener;
 
@@ -76,16 +77,18 @@ public class DayCalendarFragment extends Fragment {
                     return false;
                 }
 
+                hourVerticalPoints = dayCalendarView.hourVerticalPoints;
+                hourLineTopPadding = dayCalendarView.hourLineTopPadding;
+
                 if (!longClickDetected) {
 
-                    hourVerticalPoints = dayCalendarView.hourVerticalPoints;
-                    hourLineTopPadding = dayCalendarView.hourLineTopPadding;
+
                     sendStartHour = (event.getY() - hourLineTopPadding) / hourVerticalPoints;
 
                     for (int i=0; i < listener.getDaysEvents().size(); i++) {
                         CalendarEvent calendarEvent = listener.getDaysEvents().get(i);
                         if (calendarEvent.getStartTime() <= sendStartHour && sendStartHour <= calendarEvent.getStartTime() + calendarEvent.getDuration()) {
-                            Intent intent = new Intent(getActivity(), DisplayLoggerActivity.class);
+                            Intent intent = new Intent(getActivity(), LoggerActivity.class);
                             intent.putExtra("startHour", sendStartHour);
                             intent.putExtra("startDay", todaysDateString);
                             intent.putExtra("editingExistingEvent", true);
@@ -96,15 +99,32 @@ public class DayCalendarFragment extends Fragment {
                     }
 
 
-                    Intent intent = new Intent(getActivity(), DisplayLoggerActivity.class);
+                    Intent intent = new Intent(getActivity(), LoggerActivity.class);
                     intent.putExtra("startHour", sendStartHour);
                     intent.putExtra("startDay", todaysDateString);
                     intent.putExtra("editingExistingEvent", false);
                     listener.openLoggerActivity(intent);
                     return true;
                 }
+                // Handle long click
+                else {
+                    longClickDetected = false;
 
-                longClickDetected = false;
+                    for (int i=0; i < listener.getDaysEvents().size(); i++) {
+
+                        CalendarEvent calendarEvent = listener.getDaysEvents().get(i);
+
+                        double eventStartLocation = timeToYLocation(calendarEvent.getStartTime());
+                        double eventEndLocation = timeToYLocation(calendarEvent.getStartTime() + calendarEvent.getDuration());
+                        double touchEventLocation = event.getY();
+
+                        if (event.getY() > eventStartLocation && event.getY() < eventEndLocation) {
+                            Toast.makeText(getActivity(), "Editing event", Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                    }
+                }
+
                 return false;
 
             }
@@ -116,8 +136,7 @@ public class DayCalendarFragment extends Fragment {
             public boolean onLongClick(View v) {
 
                 longClickDetected = true;
-
-                Toast.makeText(getActivity(), "long click", Toast.LENGTH_SHORT).show();
+                editMode = true;
                 return true;
             }
         });
@@ -125,6 +144,22 @@ public class DayCalendarFragment extends Fragment {
         return dayCalendarView;
     }
 
+    private void endEditingMode() {
+        //TODO - Remove lines
+
+        //TODO - save
+
+        editMode = false;
+
+    }
+
+    public double timeToYLocation(double time) {
+        double result = hourLineTopPadding + time * hourVerticalPoints;
+        return result;
+    }
+
+    public double yLocationToTime(double yLocation) {
+        return (yLocation - hourLineTopPadding) / hourVerticalPoints;
+    }
+
 }
-
-
