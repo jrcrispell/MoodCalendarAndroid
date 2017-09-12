@@ -4,10 +4,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
-
-/**
- * Created by jrcrispell on 9/12/17.
- */
+import android.view.Menu;
+import android.view.MenuInflater;
 
 public class SettingsFragment extends PreferenceFragment {
 
@@ -20,5 +18,7 @@ public class SettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.prefs_screen);
+
     }
+
 }

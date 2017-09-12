@@ -2,15 +2,10 @@ package com.wordpress.jrcrispell.moodcalendar;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Rect;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -83,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
         final String month = new SimpleDateFormat("MM", locale).format(currentInstance.getTime());
         final String day = new SimpleDateFormat("dd", locale).format(currentInstance.getTime());
 
-        final TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
+        final TextView dateTextView = (TextView) findViewById(R.id.headerTextView);
         dateTextView.setText(convertDateString(selectedDate));
         dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +129,16 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
                 dateTextView.setText(convertDateString(selectedDate));
                 daysEvents = eventDBHelper.getDaysEvents(selectedDate);
                 refreshView();
+
+            }
+        });
+
+        ImageButton settingsButton = (ImageButton) findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
 
             }
         });
@@ -215,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     public void setDraggableYLocs(ArrayList<Double> draggableYLocs) {
         this.draggableYLocs = draggableYLocs;
     }
-
 
     public void refreshView() {
         getFragmentManager().beginTransaction().replace(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();

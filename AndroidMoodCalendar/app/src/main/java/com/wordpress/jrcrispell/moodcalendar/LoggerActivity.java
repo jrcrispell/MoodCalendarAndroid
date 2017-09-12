@@ -76,8 +76,8 @@ public class LoggerActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         //getSupportActionBar().setHomeButtonEnabled(true);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.logger_action_bar_2);
-        TextView dateTV = (TextView) getSupportActionBar().getCustomView().findViewById(R.id.dateTextView);
+        getSupportActionBar().setCustomView(R.layout.logger_action_bar);
+        TextView dateTV = (TextView) getSupportActionBar().getCustomView().findViewById(R.id.headerTextView);
         dateTV.setText(MainActivity.convertDateString(startDay));
 
         ImageButton deleteButton = (ImageButton) findViewById(R.id.delete_button);

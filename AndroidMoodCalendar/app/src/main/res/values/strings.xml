@@ -8,4 +8,5 @@
     <string name="confirm_deletion">Are you sure you want to delete this event?</string>
     <string name="delete">Delete</string>
     <string name="ok">OK</string>
+    <string name="settings">Settings</string>
 </resources>
