@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Depression Screening">
+
+<EditTextPreference android:title="Screen Frequency"
+    android:summary="How often user is prompted to complete depression screen"
+    android:key="com.wordpress.jrcrispell.moodcalendar"
+    android:inputType="number"
+    android:defaultValue="30"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
