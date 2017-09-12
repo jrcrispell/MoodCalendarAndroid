@@ -1,8 +1,11 @@
 package com.wordpress.jrcrispell.moodcalendar;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
@@ -34,6 +37,7 @@ public class DayCalendarView extends View {
     ArrayList<String> eventScores = new ArrayList<>();
     ArrayList<Integer> hourLinesToDraw = new ArrayList<>();
     ArrayList<Integer> hourLinesToOmit = new ArrayList<>();
+    Bitmap handle;
 
     Context context;
 
@@ -46,6 +50,8 @@ public class DayCalendarView extends View {
         if (context instanceof DayCalendarFragment.DayCalendarFragmentListener) {
             listener = (DayCalendarFragment.DayCalendarFragmentListener) context;
         }
+        handle = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_handle);
+
     }
 
     public void drawCalendar() {
@@ -63,6 +69,7 @@ public class DayCalendarView extends View {
 
         for (int i=0; i<listener.getDaysEvents().size(); i++) {
             CalendarEvent event = listener.getDaysEvents().get(i);
+
             int startY = (int) (event.getStartTime() * hourVerticalPoints) + hourLineTopPadding;
             int endY = (int) (event.getDuration() * hourVerticalPoints) + startY;
             eventRectangles.add(new Rect(hourLineXStart, startY, hourLineXEnd, endY));
@@ -151,6 +158,14 @@ public class DayCalendarView extends View {
             canvas.drawText(hour, hourLabelXStart, (i * hourVerticalPoints) + hourLabelYStart, textPaint);
         }
 
+        // Draggable handles
+        for (Double yLoc : listener.getDraggableYLocs()) {
+
+            // TODO - see if i can just programmatically add an imageview with an onclick listener
+            // Otherwise it's gonna be hacky AF
+            canvas.drawBitmap(handle, eventRectangles.get(0).right - 200, yLoc.floatValue(), borderPaint);
+        }
+
     }
 
     private int measureDimension(int desiredSize, int measureSpec) {
@@ -229,5 +244,9 @@ public class DayCalendarView extends View {
 //            height = desiredHeight;
 //        }
 //        setMeasuredDimension(width, height);
+    }
+
+    public void makeDraggable() {
+
     }
 }

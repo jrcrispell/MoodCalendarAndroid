@@ -16,12 +16,15 @@ public class CalendarEvent implements Parcelable {
     private String startDay;
     private int dbEventID;
 
+    private boolean beingEdited;
+
     public CalendarEvent(double startTime, double duration, String description, int moodScore, String startDay) {
         this.startTime = startTime;
         this.duration = duration;
         this.description = description;
         this.moodScore = moodScore;
         this.startDay = startDay;
+        beingEdited = false;
     }
     public CalendarEvent() {
 
@@ -106,5 +109,13 @@ public class CalendarEvent implements Parcelable {
 
     public void setDbEventID(int dbEventID) {
         this.dbEventID = dbEventID;
+    }
+
+    public boolean isBeingEdited() {
+        return beingEdited;
+    }
+
+    public void setBeingEdited(boolean beingEdited) {
+        this.beingEdited = beingEdited;
     }
 }

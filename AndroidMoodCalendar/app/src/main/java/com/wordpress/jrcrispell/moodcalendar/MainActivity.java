@@ -3,6 +3,7 @@ package com.wordpress.jrcrispell.moodcalendar;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     ActionBar actionBar;
 
     ArrayList<CalendarEvent> daysEvents;
-
+    ArrayList<Double> draggableYLocs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,6 +205,17 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     public void setDaysEvents(ArrayList<CalendarEvent> daysEvents) {
         this.daysEvents = daysEvents;
     }
+
+    @Override
+    public ArrayList<Double> getDraggableYLocs() {
+        return draggableYLocs;
+    }
+
+    @Override
+    public void setDraggableYLocs(ArrayList<Double> draggableYLocs) {
+        this.draggableYLocs = draggableYLocs;
+    }
+
 
     public void refreshView() {
         getFragmentManager().beginTransaction().replace(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();

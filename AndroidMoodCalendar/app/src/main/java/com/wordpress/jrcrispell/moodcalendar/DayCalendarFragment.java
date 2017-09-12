@@ -3,12 +3,17 @@ package com.wordpress.jrcrispell.moodcalendar;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,10 +34,16 @@ public class DayCalendarFragment extends Fragment {
 
     boolean longClickDetected = false;
 
+    CalendarEvent editingEvent;
+
+
     interface DayCalendarFragmentListener {
         void openLoggerActivity(Intent intent);
         ArrayList<CalendarEvent> getDaysEvents();
         void setDaysEvents(ArrayList<CalendarEvent> daysEvents);
+        ArrayList<Double> getDraggableYLocs();
+        void setDraggableYLocs(ArrayList<Double> draggableYLocs);
+        void refreshView();
     }
 
     @Override
@@ -41,6 +52,8 @@ public class DayCalendarFragment extends Fragment {
         if (context instanceof DayCalendarFragmentListener) {
             listener = (DayCalendarFragmentListener) context;
         }
+        Log.d("TAG", "onAttach: wtf");
+
     }
 
     @Override
@@ -80,8 +93,14 @@ public class DayCalendarFragment extends Fragment {
                 hourVerticalPoints = dayCalendarView.hourVerticalPoints;
                 hourLineTopPadding = dayCalendarView.hourLineTopPadding;
 
+
                 if (!longClickDetected) {
 
+                    if (editMode) {
+                        Toast.makeText(getActivity(), "end edit mode", Toast.LENGTH_SHORT).show();
+                        endEditingMode();
+                        return true;
+                    }
 
                     sendStartHour = (event.getY() - hourLineTopPadding) / hourVerticalPoints;
 
@@ -116,10 +135,26 @@ public class DayCalendarFragment extends Fragment {
 
                         double eventStartLocation = timeToYLocation(calendarEvent.getStartTime());
                         double eventEndLocation = timeToYLocation(calendarEvent.getStartTime() + calendarEvent.getDuration());
-                        double touchEventLocation = event.getY();
 
                         if (event.getY() > eventStartLocation && event.getY() < eventEndLocation) {
+                            editingEvent = calendarEvent;
                             Toast.makeText(getActivity(), "Editing event", Toast.LENGTH_SHORT).show();
+
+//                            ImageView imageView = new ImageView(getActivity());
+//                            imageView.setImageResource(R.drawable.ic_drag_handle_black_24dp);
+//                            imageView.setY((float)eventStartLocation);
+//                            ArrayList<View> touchables = new ArrayList<View>();
+//                            touchables.add(imageView);
+//                            v.addTouchables(touchables);
+
+                            ArrayList<Double> draggableYLocs = new ArrayList<Double>();
+                            draggableYLocs.add(eventStartLocation);
+                            listener.setDraggableYLocs(draggableYLocs);
+
+                            editingEvent.setBeingEdited(true);
+
+
+                            v.invalidate();
                             return true;
                         }
                     }
@@ -150,6 +185,7 @@ public class DayCalendarFragment extends Fragment {
         //TODO - save
 
         editMode = false;
+        editingEvent.setBeingEdited(false);
 
     }
 
