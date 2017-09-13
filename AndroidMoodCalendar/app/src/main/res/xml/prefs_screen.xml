@@ -3,11 +3,28 @@
 
     <PreferenceCategory android:title="Depression Screening">
 
-<EditTextPreference android:title="Screen Frequency"
-    android:summary="How often user is prompted to complete depression screen"
-    android:key="com.wordpress.jrcrispell.moodcalendar"
-    android:inputType="number"
-    android:defaultValue="30"/>
+        <EditTextPreference
+            android:defaultValue="30"
+            android:inputType="number"
+            android:key="com.wordpress.jrcrispell.moodcalendar.depression_screen_days"
+            android:singleLine="false"
+            android:title="Days before each depression screen" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Notification hours">
+
+        <Preference
+            android:key="com.wordpress.jrcrispell.moodcalendar.notifications_start"
+            android:defaultValue="@string/_8am"
+            android:title="Notifications start at"
+            android:summary="@string/_8am"
+            />
+        <Preference
+            android:key="com.wordpress.jrcrispell.moodcalendar.notifications_end"
+            android:defaultValue="@string/_11pm"
+            android:title="Notifications end at"
+            android:summary="@string/_11pm"
+            />
 
     </PreferenceCategory>
 

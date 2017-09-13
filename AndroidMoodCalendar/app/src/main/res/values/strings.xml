@@ -9,4 +9,7 @@
     <string name="delete">Delete</string>
     <string name="ok">OK</string>
     <string name="settings">Settings</string>
+    <string name="_8am">8:00 AM</string>
+    <string name="_11pm">11:00 PM</string>
+
 </resources>
