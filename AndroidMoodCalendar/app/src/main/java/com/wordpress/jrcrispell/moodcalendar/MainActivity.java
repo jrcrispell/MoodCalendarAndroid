@@ -1,11 +1,15 @@
 package com.wordpress.jrcrispell.moodcalendar;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -29,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     ArrayList<CalendarEvent> daysEvents;
     ArrayList<Double> draggableYLocs = new ArrayList<>();
 
+    private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -39,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
         else {
             locale = getResources().getConfiguration().locale;
         }
+
+
 
         currentInstance = Calendar.getInstance();
         selectedDate = new SimpleDateFormat("MM-dd-yyyy", locale).format(currentInstance.getTime());
@@ -56,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
 
         configureButtons();
+        setUpNotifications(this);
+
         getFragmentManager().beginTransaction().add(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();
 
     }
@@ -224,5 +234,27 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     public void refreshView() {
         getFragmentManager().beginTransaction().replace(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();
         configureButtons();
+    }
+
+    public static void setUpNotifications(Context context) {
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, LogNotification.class);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
+
+        // Cancel if there's an existing intent
+        alarmManager.cancel(pendingIntent);
+
+        // Schedule notification for 5 min after next hour.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.add(Calendar.HOUR, 1);
+//        calendar.set(Calendar.MINUTE, 5);
+
+        //TODO - for testing only
+        calendar.add(Calendar.MINUTE, 1);
+        //alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
     }
 }

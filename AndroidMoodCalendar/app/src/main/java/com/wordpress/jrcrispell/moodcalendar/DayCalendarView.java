@@ -1,20 +1,21 @@
 package com.wordpress.jrcrispell.moodcalendar;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.Display;
-import android.view.View;
-import android.view.WindowManager;
+        import android.content.Context;
+        import android.graphics.Bitmap;
+        import android.graphics.BitmapFactory;
+        import android.graphics.Canvas;
+        import android.graphics.Paint;
+        import android.graphics.Point;
+        import android.graphics.PorterDuff;
+        import android.graphics.Rect;
+        import android.support.v4.content.ContextCompat;
+        import android.util.Log;
+        import android.view.Display;
+        import android.view.DragEvent;
+        import android.view.View;
+        import android.view.WindowManager;
 
-import java.util.ArrayList;
+        import java.util.ArrayList;
 
 public class DayCalendarView extends View {
 
@@ -50,8 +51,7 @@ public class DayCalendarView extends View {
         if (context instanceof DayCalendarFragment.DayCalendarFragmentListener) {
             listener = (DayCalendarFragment.DayCalendarFragmentListener) context;
         }
-        handle = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_handle);
-
+        handle = BitmapFactory.decodeResource(getResources(), R.drawable.handle2);
     }
 
     public void drawCalendar() {
@@ -161,9 +161,12 @@ public class DayCalendarView extends View {
         // Draggable handles
         for (Double yLoc : listener.getDraggableYLocs()) {
 
-            // TODO - see if i can just programmatically add an imageview with an onclick listener
-            // Otherwise it's gonna be hacky AF
-            canvas.drawBitmap(handle, eventRectangles.get(0).right - 200, yLoc.floatValue(), borderPaint);
+            int middle = (eventRectangles.get(0).right - eventRectangles.get(0).left)/2;
+
+            handle.setHasAlpha(true);
+
+
+            canvas.drawBitmap(handle, middle, yLoc.floatValue() - handle.getHeight()/2, null);
         }
 
     }
@@ -205,7 +208,7 @@ public class DayCalendarView extends View {
 //
 
         //TODO - fix this bandaid
-          setMeasuredDimension(2000, 2900);
+        setMeasuredDimension(2000, 2900);
 
 
         // take 2
@@ -248,5 +251,10 @@ public class DayCalendarView extends View {
 
     public void makeDraggable() {
 
+    }
+
+    @Override
+    public boolean onDragEvent(DragEvent event) {
+        return super.onDragEvent(event);
     }
 }

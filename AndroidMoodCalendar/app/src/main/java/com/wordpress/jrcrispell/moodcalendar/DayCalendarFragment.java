@@ -9,11 +9,13 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -35,6 +37,8 @@ public class DayCalendarFragment extends Fragment {
     boolean longClickDetected = false;
 
     CalendarEvent editingEvent;
+
+    private static final String TAG = "DayCalendarFragment";
 
 
     interface DayCalendarFragmentListener {
@@ -73,6 +77,9 @@ public class DayCalendarFragment extends Fragment {
     }
 
     private View getDayCalendarView() {
+
+        final ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.scroll_view);
+
         MainActivity mainActivity = (MainActivity) getActivity();
         todaysDateString = mainActivity.selectedDate;
 
@@ -86,9 +93,18 @@ public class DayCalendarFragment extends Fragment {
 
                 DayCalendarView dcView = (DayCalendarView) v;
 
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        Log.d(TAG, "onTouch: MOVE" + event.getY());
+                        break;
+                }
+
                 if (event.getAction() != 1 || event.getX() < dcView.hourLabelXStart) {
                     return false;
                 }
+
+
+
 
                 hourVerticalPoints = dayCalendarView.hourVerticalPoints;
                 hourLineTopPadding = dayCalendarView.hourLineTopPadding;
@@ -149,6 +165,7 @@ public class DayCalendarFragment extends Fragment {
 
                             ArrayList<Double> draggableYLocs = new ArrayList<Double>();
                             draggableYLocs.add(eventStartLocation);
+                            draggableYLocs.add(eventEndLocation);
                             listener.setDraggableYLocs(draggableYLocs);
 
                             editingEvent.setBeingEdited(true);
@@ -166,15 +183,52 @@ public class DayCalendarFragment extends Fragment {
         });
 
 
+        //Todo disable scrollview
+//        scrollView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                return true;
+//            }
+//        });
+
+
         dayCalendarView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+
+
 
                 longClickDetected = true;
                 editMode = true;
                 return true;
             }
         });
+
+//        dayCalendarView.setOnDragListener(new View.OnDragListener() {
+//            @Override
+//            public boolean onDrag(View view, DragEvent dragEvent) {
+//                if (!editMode) {
+//                    return false;
+//                }
+//                switch (dragEvent.getAction()) {
+//                    case DragEvent.ACTION_DRAG_STARTED:
+//                        Log.d(TAG, "started ");
+//                        break;
+//                    case DragEvent.ACTION_DRAG_ENTERED:
+//                        Log.d(TAG, "entered");
+//                        break;
+//                    case DragEvent.ACTION_DRAG_LOCATION:
+//                        Log.d(TAG, "location");
+//                        break;
+//                    case DragEvent.ACTION_DRAG_ENDED:
+//                        Log.d(TAG, "ended");
+//                        break;
+//                    case DragEvent.ACTION_DROP:
+//                        Log.d(TAG, "drop");
+//                }
+//                    return true;
+//            }
+//        });
 
         return dayCalendarView;
     }

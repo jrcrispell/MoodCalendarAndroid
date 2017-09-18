@@ -18,8 +18,10 @@
         </activity>
         <activity
             android:name=".LoggerActivity"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
         <activity android:name=".SettingsActivity"></activity>
+        <service android:name=".LogNotification"
+            android:exported="false"/>
     </application>
 
 </manifest>
