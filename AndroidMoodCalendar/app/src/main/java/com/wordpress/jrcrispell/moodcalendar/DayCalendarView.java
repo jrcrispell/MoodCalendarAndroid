@@ -67,6 +67,7 @@ public class DayCalendarView extends View {
             hourLinesToDraw.add(i);
         }
 
+        //TODO - test it out, seemed to fail when i had a long am-pm event
         for (int i=0; i<listener.getDaysEvents().size(); i++) {
             CalendarEvent event = listener.getDaysEvents().get(i);
 
@@ -76,6 +77,8 @@ public class DayCalendarView extends View {
             eventDescriptions.add(event.getDescription());
             eventScores.add(Integer.toString(event.getMoodScore()));
 
+
+
             // Omit hour lines that already have an event.
             for (int hour : hourLinesToDraw) {
                 if (hour >= event.getStartTime() && hour <= event.getStartTime() + event.getDuration()) {
@@ -84,6 +87,7 @@ public class DayCalendarView extends View {
             }
         }
 
+        //TODO - BUG - we're not removing the right hour lines here i think
         for (int hour : hourLinesToOmit) {
             if (hourLinesToDraw.contains(hour)) {
                 hourLinesToDraw.remove(hour);

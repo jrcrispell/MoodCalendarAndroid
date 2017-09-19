@@ -32,8 +32,22 @@
         <item name="android:textColor">@color/brightWhite</item>
     </style>
 
+    <style name="logger_time_tvs">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:inputType">none</item>
+        <item name="android:textColor">@color/brightWhite</item>
+        <item name="android:textSize">40sp</item>
+    </style>
 
-
+    <style name="loggerAMPMTVs">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:textColor">@color/brightWhite</item>
+    </style>
 
 
 </resources>

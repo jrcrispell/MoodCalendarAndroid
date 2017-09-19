@@ -91,8 +91,14 @@ public class LoggerActivity extends AppCompatActivity {
         int startMinutesInt = 0;
         int endHourInt = startHourInt + 1;
         int endMinutesInt = 0;
+        boolean startIsPM = false;
+        boolean endIsPM = false;
+
+
 
         if (editingExisting) {
+
+            //TODO check am or pm
             editingId = extras.getInt("eventID");
             deleteButton.setVisibility(View.VISIBLE);
 
@@ -108,19 +114,51 @@ public class LoggerActivity extends AppCompatActivity {
 
             descriptionET.setText(editingEvent.getDescription());
             moodTV.setText(Integer.toString(editingEvent.getMoodScore()));
-            Log.d("POOP", "onCreate: " + editingEvent);
         }
 
-            startTime.setText(String.format(locale, "%02d:%02d", startHourInt, startMinutesInt));
-            endTime.setText(String.format(locale, "%02d:%02d", endHourInt, endMinutesInt));
+
+        int convertedStartHour = startHourInt;
+        if (startHourInt > 12) {
+            convertedStartHour = startHourInt - 12;
+            startIsPM = true;
+        }
+        int convertedEndHour = endHourInt;
+        if (endHourInt > 12) {
+            convertedEndHour = endHourInt - 12;
+            endIsPM = true;
+        }
+
+            startTime.setText(String.format(locale, "%02d:%02d", convertedStartHour, startMinutesInt));
+            endTime.setText(String.format(locale, "%02d:%02d", convertedEndHour, endMinutesInt));
+
+        final TextView startAMPM = (TextView) findViewById(R.id.startAMPMTV);
+        final TextView endAMPM = (TextView) findViewById(R.id.endAMPMTV);
+        if (startIsPM) {
+            startAMPM.setText(R.string.pm);
+        }
+        if (endIsPM) {
+            endAMPM.setText(R.string.pm);
+        }
+
 
 
         final TimePickerDialog.OnTimeSetListener startTimeListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                startTime.setText(String.format(locale, "%02d:%02d", hourOfDay, minute));
+
                 double decimal = ((double) minute/60);
                 setStartDouble(hourOfDay + decimal);
+
+                if (hourOfDay > 12) {
+                    hourOfDay = hourOfDay - 12;
+                    startAMPM.setText(R.string.pm);
+                }
+                else {
+                    startAMPM.setText(R.string.am);
+                }
+
+                startTime.setText(String.format(locale, "%02d:%02d", hourOfDay, minute));
+
                 validateTimes();
             }
         };
@@ -139,9 +177,20 @@ public class LoggerActivity extends AppCompatActivity {
         final TimePickerDialog.OnTimeSetListener endTimeListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                endTime.setText(String.format(locale, "%02d:%02d", hourOfDay, minute));
+
                 double decimal = ((double) minute/60);
                 setEndDouble(hourOfDay + decimal);
+
+                if (hourOfDay > 12) {
+                    hourOfDay = hourOfDay - 12;
+                    endAMPM.setText(R.string.pm);
+                }
+                else {
+                    endAMPM.setText(R.string.am);
+                }
+
+                endTime.setText(String.format(locale, "%02d:%02d", hourOfDay, minute));
+
                 validateTimes();
             }
         };
