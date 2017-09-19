@@ -77,11 +77,19 @@ public class LogNotification extends IntentService {
             builder.setContentText("Log activity for TIME");
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_settings_white_24dp));
             builder.setPriority(NotificationCompat.PRIORITY_MAX);
+            builder.setDefaults(2);
+
 
             // Settings button
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             PendingIntent settingsPendingIntent = PendingIntent.getActivity(this, 0, settingsIntent, 0);
             builder.addAction(R.drawable.ic_settings_white_24dp, "Settings", settingsPendingIntent);
+
+            //TODO - add functionality
+            // Snooze button
+            Intent settingsIntent2 = new Intent(this, SettingsActivity.class);
+            PendingIntent settingsPendingIntent2 = PendingIntent.getActivity(this, 0, settingsIntent2, 0);
+            builder.addAction(R.drawable.ic_settings_white_24dp, "Snooze", settingsPendingIntent2);
 
             // Set content intent
             builder.setAutoCancel(true);

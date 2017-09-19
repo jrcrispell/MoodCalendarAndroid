@@ -2,9 +2,11 @@ package com.wordpress.jrcrispell.moodcalendar;
 
 import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,7 +32,7 @@ public class SettingsFragment extends PreferenceFragment {
                 TimePickerDialog dialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        Toast.makeText(getActivity(), i, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), Integer.toString(i) + "." + Integer.toString(i1), Toast.LENGTH_SHORT).show();
                     }
                 }, 8, 0, false);
                 dialog.show();

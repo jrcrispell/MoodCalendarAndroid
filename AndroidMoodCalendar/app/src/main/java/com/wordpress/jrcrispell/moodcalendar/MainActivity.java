@@ -5,7 +5,9 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -68,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
         getFragmentManager().beginTransaction().add(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();
 
+        SharedPreferences dPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String test = dPrefs.getString("com.wordpress.jrcrispell.moodcalendar.depression_screen_days", null);
+        Log.d(TAG, "onCreate: " + test);
     }
 
 

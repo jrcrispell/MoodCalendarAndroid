@@ -67,7 +67,6 @@ public class DayCalendarView extends View {
             hourLinesToDraw.add(i);
         }
 
-        //TODO - test it out, seemed to fail when i had a long am-pm event
         for (int i=0; i<listener.getDaysEvents().size(); i++) {
             CalendarEvent event = listener.getDaysEvents().get(i);
 

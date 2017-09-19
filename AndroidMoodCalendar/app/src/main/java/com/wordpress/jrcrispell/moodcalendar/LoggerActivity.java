@@ -19,6 +19,8 @@ import java.util.Locale;
 public class LoggerActivity extends AppCompatActivity {
 
     //TODO - bug to fix: log activity from 11:30 AM to 11:50PM, then change end time to 11:50AM - "end time less than start time" error
+    // dunno if above is still valid
+
 
     private TextView startTime;
     private TextView endTime;
