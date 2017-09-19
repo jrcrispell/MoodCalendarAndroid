@@ -18,6 +18,8 @@ import java.util.Locale;
 
 public class LoggerActivity extends AppCompatActivity {
 
+    //TODO - bug to fix: log activity from 11:30 AM to 11:50PM, then change end time to 11:50AM - "end time less than start time" error
+
     private TextView startTime;
     private TextView endTime;
     int incomingStartTime;
@@ -46,8 +48,7 @@ public class LoggerActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             locale = getResources().getConfiguration().getLocales().get(0);
-        }
-        else {
+        } else {
             locale = getResources().getConfiguration().locale;
         }
 
@@ -93,7 +94,6 @@ public class LoggerActivity extends AppCompatActivity {
         boolean endIsPM = false;
 
 
-
         if (editingExisting) {
 
             //TODO check am or pm
@@ -116,18 +116,24 @@ public class LoggerActivity extends AppCompatActivity {
 
 
         int convertedStartHour = startHourInt;
+        if (startHourInt == 12) {
+            startIsPM = true;
+        }
         if (startHourInt > 12) {
             convertedStartHour = startHourInt - 12;
             startIsPM = true;
         }
         int convertedEndHour = endHourInt;
+        if (endHourInt == 12) {
+            endIsPM = true;
+        }
         if (endHourInt > 12) {
             convertedEndHour = endHourInt - 12;
             endIsPM = true;
         }
 
-            startTime.setText(String.format(locale, "%02d:%02d", convertedStartHour, startMinutesInt));
-            endTime.setText(String.format(locale, "%02d:%02d", convertedEndHour, endMinutesInt));
+        startTime.setText(String.format(locale, "%02d:%02d", convertedStartHour, startMinutesInt));
+        endTime.setText(String.format(locale, "%02d:%02d", convertedEndHour, endMinutesInt));
 
         final TextView startAMPM = (TextView) findViewById(R.id.startAMPMTV);
         final TextView endAMPM = (TextView) findViewById(R.id.endAMPMTV);
@@ -139,18 +145,20 @@ public class LoggerActivity extends AppCompatActivity {
         }
 
 
-
         final TimePickerDialog.OnTimeSetListener startTimeListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                double decimal = ((double) minute/60);
+                double decimal = ((double) minute / 60);
                 setStartDouble(hourOfDay + decimal);
 
                 if (hourOfDay > 12) {
                     hourOfDay = hourOfDay - 12;
                     startAMPM.setText(R.string.pm);
+                } else if (hourOfDay == 12) {
+                    startAMPM.setText(R.string.pm);
                 }
+
                 else {
                     startAMPM.setText(R.string.am);
                 }
@@ -161,7 +169,8 @@ public class LoggerActivity extends AppCompatActivity {
             }
         };
 
-        final TimePickerDialog startTimePicker = new TimePickerDialog(LoggerActivity.this, startTimeListener, startHourInt, startMinutesInt, false);;
+        final TimePickerDialog startTimePicker = new TimePickerDialog(LoggerActivity.this, startTimeListener, startHourInt, startMinutesInt, false);
+        ;
         startTimePicker.setTitle("Select Time");
 
         startTime.setOnClickListener(new View.OnClickListener() {
@@ -176,14 +185,17 @@ public class LoggerActivity extends AppCompatActivity {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                double decimal = ((double) minute/60);
+                double decimal = ((double) minute / 60);
                 setEndDouble(hourOfDay + decimal);
+
 
                 if (hourOfDay > 12) {
                     hourOfDay = hourOfDay - 12;
                     endAMPM.setText(R.string.pm);
-                }
-                else {
+                } else if (hourOfDay == 12) {
+                    endAMPM.setText(R.string.pm);
+
+                } else {
                     endAMPM.setText(R.string.am);
                 }
 
@@ -193,7 +205,8 @@ public class LoggerActivity extends AppCompatActivity {
             }
         };
 
-        final TimePickerDialog endTimePicker = new TimePickerDialog(LoggerActivity.this, endTimeListener, endHourInt, endMinutesInt, false);;
+        final TimePickerDialog endTimePicker = new TimePickerDialog(LoggerActivity.this, endTimeListener, endHourInt, endMinutesInt, false);
+        ;
         startTimePicker.setTitle("Select Time");
 
         endTime.setOnClickListener(new View.OnClickListener() {
@@ -232,18 +245,16 @@ public class LoggerActivity extends AppCompatActivity {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(LoggerActivity.this);
                 builder.setTitle(R.string.select_mood)
-                .setItems(R.array.mood_array, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int index) {
-                        moodTV.setText(" " + Integer.toString(index + 1) + " ");
-                    }
-                });
+                        .setItems(R.array.mood_array, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int index) {
+                                moodTV.setText(" " + Integer.toString(index + 1) + " ");
+                            }
+                        });
                 builder.show();
 
             }
         });
-
-
 
 
         ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
@@ -260,9 +271,7 @@ public class LoggerActivity extends AppCompatActivity {
 
                 if (editingExisting) {
                     dbHelper.editEvent(newEvent, editingId);
-                }
-
-                else {
+                } else {
                     dbHelper.addEvent(newEvent);
                 }
                 finish();
@@ -294,8 +303,7 @@ public class LoggerActivity extends AppCompatActivity {
             builder.setMessage("End time must be later than start time!");
             builder.show();
             saveButton.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             saveButton.setVisibility(View.VISIBLE);
         }
     }
