@@ -87,10 +87,9 @@ public class DayCalendarView extends View {
             }
         }
 
-        //TODO - BUG - we're not removing the right hour lines here i think
         for (int hour : hourLinesToOmit) {
             if (hourLinesToDraw.contains(hour)) {
-                hourLinesToDraw.remove(hour);
+                hourLinesToDraw.remove(Integer.valueOf(hour));
             }
         }
 

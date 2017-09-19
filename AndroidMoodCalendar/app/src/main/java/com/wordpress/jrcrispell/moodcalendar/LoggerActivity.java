@@ -39,8 +39,6 @@ public class LoggerActivity extends AppCompatActivity {
         endDouble = end;
     }
 
-//TODO - get rid of military time
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
