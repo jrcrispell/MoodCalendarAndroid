@@ -64,7 +64,7 @@ public class LogNotification extends IntentService {
             double end = event.getStartTime() + event.getDuration();
 
             // Check to see if an activity has been logged for the previous hour.
-            if (end >= prevHour) {
+            if (end > prevHour) {
                 prevHourLogged = true;
             }
         }
@@ -105,21 +105,21 @@ public class LogNotification extends IntentService {
             NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
             manager.notify(0, builder.build());
 
-            // Run again in an hour
-            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            Intent notificationIntent = new Intent(this, LogNotification.class);
-            PendingIntent notificationPendingIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
-
-            // Cancel if there's an existing intent
-            alarmManager.cancel(notificationPendingIntent);
-
-            // Schedule notification for 5 min after next hour.
-            calendar.setTimeInMillis(System.currentTimeMillis());
-            calendar.add(Calendar.HOUR, 1);
-            calendar.set(Calendar.MINUTE, 5);
-
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), notificationPendingIntent);
-
         }
+
+        // Run again in an hour
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent notificationIntent = new Intent(this, LogNotification.class);
+        PendingIntent notificationPendingIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+
+        // Cancel if there's an existing intent
+        alarmManager.cancel(notificationPendingIntent);
+
+        // Schedule notification for 5 min after next hour.
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.HOUR, 1);
+        calendar.set(Calendar.MINUTE, 5);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), notificationPendingIntent);
     }
 }

@@ -133,6 +133,7 @@ public class LoggerActivity extends AppCompatActivity {
             convertedEndHour = endHourInt - 12;
             endIsPM = true;
         }
+        //TODO - (low priority) handle midnight as end time (or handle cross-day events)
 
         startTime.setText(String.format(locale, "%2d:%02d", convertedStartHour, startMinutesInt));
         endTime.setText(String.format(locale, "%2d:%02d", convertedEndHour, endMinutesInt));
