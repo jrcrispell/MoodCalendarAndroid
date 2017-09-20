@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
 
     <ImageButton
@@ -18,8 +16,7 @@
         android:src="@drawable/left_arrow"
         app:layout_constraintRight_toLeftOf="@+id/headerTextView"
         android:layout_marginRight="15dp"
-        app:layout_constraintTop_toTopOf="@+id/headerTextView"
-        android:layout_marginTop="0dp" />
+        app:layout_constraintTop_toTopOf="@+id/headerTextView" />
 
     <TextView
         android:id="@+id/headerTextView"
@@ -33,7 +30,8 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp" />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <ImageButton
         android:id="@+id/nextDayButton"
@@ -45,20 +43,21 @@
         android:src="@drawable/right_arrow"
         app:layout_constraintLeft_toRightOf="@+id/headerTextView"
         android:layout_marginLeft="15dp"
-        app:layout_constraintTop_toTopOf="@+id/headerTextView"
-        android:layout_marginTop="0dp" />
+        app:layout_constraintTop_toTopOf="@+id/headerTextView" />
 
     <ImageButton
         android:id="@+id/settingsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_vertical"
         android:background="@null"
         android:src="@drawable/ic_settings_white_24dp"
-        android:layout_marginRight="0dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/headerTextView"
-        android:layout_marginTop="8dp" />
+        android:scaleType="fitStart"
+        android:adjustViewBounds="true"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toTopOf="@id/nextDayButton"
+        app:layout_constraintBottom_toBottomOf="@id/nextDayButton"/>
 
 
 </android.support.constraint.ConstraintLayout>
