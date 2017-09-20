@@ -24,6 +24,8 @@ public class SettingsFragment extends PreferenceFragment {
     public static final String NOTIFICATIONS_END_VALUE = "com.wordpress.jrcrispell.moodcalendar.notifications_end";
     public static final String NOTIFICATIONS_END_HOUR = "com.wordpress.jrcrispell.moodcalendar.notifications_end_hour";
     public static final String NOTIFICATIONS_END_MINUTES = "com.wordpress.jrcrispell.moodcalendar.notifications_end_minutes";
+    public static final String SCREEN_LAST_TAKEN = "com.wordpress.jrcrispell.moodcalendar.screen_last_taken";
+    public static final String SCREEN_INTERVAL = "com.wordpress.jrcrispell.moodcalendar.depression_screen_days";
 
 
 

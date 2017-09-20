@@ -4,11 +4,14 @@ import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +23,9 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements DayCalendarFragment.DayCalendarFragmentListener {
 
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     ArrayList<Double> draggableYLocs = new ArrayList<>();
 
     private static final String TAG = "MainActivity";
+    private static final String DEPRESSION_SCREEN_URL = "https://psychcentral.com/quizzes/depquiz.htm";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         actionBar = getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setDisplayShowCustomEnabled(true);
@@ -70,11 +75,35 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
         getFragmentManager().beginTransaction().add(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();
 
-        //TODO check depression screen & open if necessary
-        SharedPreferences dPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String test = dPrefs.getString("com.wordpress.jrcrispell.moodcalendar.depression_screen_days", null);
-        String test2 = dPrefs.getString("com.wordpress.jrcrispell.moodcalendar.notifications_start", null);
-        Log.d(TAG, "onCreate: " + test);
+        final SharedPreferences dPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Check if depression screen needed
+        String intervalString = dPrefs.getString(SettingsFragment.SCREEN_INTERVAL, "30");
+        int intervalInt = Integer.parseInt(intervalString);
+
+        Long screenLastTaken = dPrefs.getLong(SettingsFragment.SCREEN_LAST_TAKEN, -1);
+        Long intervalMillis = TimeUnit.DAYS.toMillis(intervalInt);
+
+        boolean timeForScreen = false;
+        if (System.currentTimeMillis() - intervalMillis > screenLastTaken) {
+            timeForScreen = true;
+        }
+
+        if (screenLastTaken == -1 || timeForScreen) {
+            // Show screen
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.depression_screen);
+            builder.setMessage(R.string.time_for_screen);
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent screenIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(DEPRESSION_SCREEN_URL));
+                    startActivity(screenIntent);
+                    dPrefs.edit().putLong(SettingsFragment.SCREEN_LAST_TAKEN, System.currentTimeMillis()).apply();
+                }
+            });
+            builder.show();
+        }
     }
 
 

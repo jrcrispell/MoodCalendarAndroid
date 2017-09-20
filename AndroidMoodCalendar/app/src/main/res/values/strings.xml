@@ -14,5 +14,7 @@
     <string name="pm">PM</string>
     <string name="am">AM</string>
     <string name="prefs_saved">Preferences saved!</string>
+    <string name="depression_screen">Depression Screen</string>
+    <string name="time_for_screen">It\'s time to take a depression screen! Woo-hoo!</string>
 
 </resources>
