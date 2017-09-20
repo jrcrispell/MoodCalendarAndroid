@@ -255,12 +255,9 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
         // Schedule notification for 5 min after next hour.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-//        calendar.add(Calendar.HOUR, 1);
-//        calendar.set(Calendar.MINUTE, 5);
+        calendar.add(Calendar.HOUR, 1);
+        calendar.set(Calendar.MINUTE, 5);
 
-        //TODO - for testing only
-        calendar.add(Calendar.MINUTE, 1);
-        //alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
     }

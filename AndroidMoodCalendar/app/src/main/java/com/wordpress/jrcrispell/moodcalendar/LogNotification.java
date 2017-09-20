@@ -1,15 +1,18 @@
 package com.wordpress.jrcrispell.moodcalendar;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,10 +69,7 @@ public class LogNotification extends IntentService {
             }
         }
 
-        //TODO - for testing only
-        prevHourLogged = true;
-
-        if (prevHourLogged) {
+        if (!prevHourLogged) {
             // Build notification
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
             builder.setSmallIcon(R.drawable.ic_save_white_24dp);
@@ -101,11 +101,25 @@ public class LogNotification extends IntentService {
             PendingIntent contentPendingIntent = PendingIntent.getActivity(this, 1, loggerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentIntent(contentPendingIntent);
 
-            //TODO - add snooze & recursion
-
             // Send notification
             NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
             manager.notify(0, builder.build());
+
+            // Run again in an hour
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent notificationIntent = new Intent(this, LogNotification.class);
+            PendingIntent notificationPendingIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+
+            // Cancel if there's an existing intent
+            alarmManager.cancel(notificationPendingIntent);
+
+            // Schedule notification for 5 min after next hour.
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.add(Calendar.HOUR, 1);
+            calendar.set(Calendar.MINUTE, 5);
+
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), notificationPendingIntent);
+
         }
     }
 }
