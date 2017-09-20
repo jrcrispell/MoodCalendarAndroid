@@ -70,7 +70,7 @@ public class LoggerActivity extends AppCompatActivity {
         endTime = (TextView) findViewById(R.id.endTimeTV);
 
 
-        startTime.setText(String.format(locale, "%02d:%02d", incomingStartTime, 0));
+        startTime.setText(String.format(locale, "%2d:%02d", incomingStartTime, 0));
 
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -134,8 +134,8 @@ public class LoggerActivity extends AppCompatActivity {
             endIsPM = true;
         }
 
-        startTime.setText(String.format(locale, "%02d:%02d", convertedStartHour, startMinutesInt));
-        endTime.setText(String.format(locale, "%02d:%02d", convertedEndHour, endMinutesInt));
+        startTime.setText(String.format(locale, "%2d:%02d", convertedStartHour, startMinutesInt));
+        endTime.setText(String.format(locale, "%2d:%02d", convertedEndHour, endMinutesInt));
 
         final TextView startAMPM = (TextView) findViewById(R.id.startAMPMTV);
         final TextView endAMPM = (TextView) findViewById(R.id.endAMPMTV);
@@ -165,7 +165,7 @@ public class LoggerActivity extends AppCompatActivity {
                     startAMPM.setText(R.string.am);
                 }
 
-                startTime.setText(String.format(locale, "%02d:%02d", hourOfDay, minute));
+                startTime.setText(String.format(locale, "%2d:%02d", hourOfDay, minute));
 
                 validateTimes();
             }
@@ -201,7 +201,7 @@ public class LoggerActivity extends AppCompatActivity {
                     endAMPM.setText(R.string.am);
                 }
 
-                endTime.setText(String.format(locale, "%02d:%02d", hourOfDay, minute));
+                endTime.setText(String.format(locale, "%2d:%02d", hourOfDay, minute));
 
                 validateTimes();
             }

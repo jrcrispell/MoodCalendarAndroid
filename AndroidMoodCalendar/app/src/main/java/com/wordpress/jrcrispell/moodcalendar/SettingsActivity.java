@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -38,6 +39,16 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.apply();
                 onBackPressed();
 
+            }
+        });
+
+        ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SettingsFragment fragment = (SettingsFragment) getFragmentManager().findFragmentById(R.id.root_fragment_container);
+                fragment.savePreferences();
+                finish();
             }
         });
     }

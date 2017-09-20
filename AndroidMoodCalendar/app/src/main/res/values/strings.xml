@@ -13,5 +13,6 @@
     <string name="_11pm">11:00 PM</string>
     <string name="pm">PM</string>
     <string name="am">AM</string>
+    <string name="prefs_saved">Preferences saved!</string>
 
 </resources>

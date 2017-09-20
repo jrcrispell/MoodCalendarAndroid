@@ -70,8 +70,10 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
 
         getFragmentManager().beginTransaction().add(R.id.dayCalendarFragmentContainer, DayCalendarFragment.newInstance()).commit();
 
+        //TODO check depression screen & open if necessary
         SharedPreferences dPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String test = dPrefs.getString("com.wordpress.jrcrispell.moodcalendar.depression_screen_days", null);
+        String test2 = dPrefs.getString("com.wordpress.jrcrispell.moodcalendar.notifications_start", null);
         Log.d(TAG, "onCreate: " + test);
     }
 
