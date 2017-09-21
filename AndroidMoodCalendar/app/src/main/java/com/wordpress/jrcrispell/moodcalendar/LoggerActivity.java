@@ -25,7 +25,6 @@ public class LoggerActivity extends AppCompatActivity {
     private TextView startTime;
     private TextView endTime;
     int incomingStartTime;
-    //Calendar incomingEndTime;
     EventDBSQLiteHelper dbHelper;
     Locale locale;
     double startDouble;
@@ -66,6 +65,12 @@ public class LoggerActivity extends AppCompatActivity {
         startDouble = incomingStartTime;
         endDouble = incomingStartTime + 1;
 
+        if (startDouble == 23) {
+            endDouble = 23.99;
+        }
+
+
+
         startTime = (TextView) findViewById(R.id.startTimeTV);
         endTime = (TextView) findViewById(R.id.endTimeTV);
 
@@ -92,6 +97,11 @@ public class LoggerActivity extends AppCompatActivity {
         int startMinutesInt = 0;
         int endHourInt = startHourInt + 1;
         int endMinutesInt = 0;
+
+        if (endHourInt == 24) {
+            endHourInt = 23;
+            endMinutesInt = 59;
+        }
         boolean startIsPM = false;
         boolean endIsPM = false;
 

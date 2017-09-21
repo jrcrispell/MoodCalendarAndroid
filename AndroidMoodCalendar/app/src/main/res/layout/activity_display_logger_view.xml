@@ -52,17 +52,18 @@
     </LinearLayout>
 
     <EditText
-        android:layout_marginTop="32dp"
         android:id="@+id/descriptionET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="32dp"
         android:hint="@string/activity_description"
+        android:singleLine="true"
         android:textAlignment="center"
         android:textColor="@color/brightWhite"
         android:textColorHint="@color/eventBorderColor"
-        android:textSize="32sp"/>
+        android:textSize="32sp" />
 
 
     <TextView
