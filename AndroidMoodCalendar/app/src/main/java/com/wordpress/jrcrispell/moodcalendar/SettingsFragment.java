@@ -15,9 +15,6 @@ import java.util.Locale;
 
 public class SettingsFragment extends PreferenceFragment {
 
-    //TODO - resize actionbar buttons
-    //TODO - change icons on notification
-
     public static final String NOTIFICATIONS_START_SUMMARY = "com.wordpress.jrcrispell.moodcalendar.notifications_start_summary";
     public static final String NOTIFICATIONS_START_VALUE = "com.wordpress.jrcrispell.moodcalendar.notifications_start";
     public static final String NOTIFICATIONS_START_HOUR = "com.wordpress.jrcrispell.moodcalendar.notifications_start_hour";

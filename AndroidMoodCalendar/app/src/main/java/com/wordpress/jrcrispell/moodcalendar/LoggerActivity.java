@@ -19,9 +19,6 @@ import java.util.Locale;
 
 public class LoggerActivity extends AppCompatActivity {
 
-    //TODO - bug to fix: log activity from 11:30 AM to 11:50PM, then change end time to 11:50AM - "end time less than start time" error
-    // dunno if above is still valid
-
 
     private TextView startTime;
     private TextView endTime;
@@ -71,7 +68,6 @@ public class LoggerActivity extends AppCompatActivity {
         }
 
 
-
         startTime = (TextView) findViewById(R.id.startTimeTV);
         endTime = (TextView) findViewById(R.id.endTimeTV);
 
@@ -83,8 +79,8 @@ public class LoggerActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.logger_action_bar);
         Toolbar parent = (Toolbar) getSupportActionBar().getCustomView().getParent();
-        parent.setPadding(0,0,0,0);
-        parent.setContentInsetsAbsolute(0,0);
+        parent.setPadding(0, 0, 0, 0);
+        parent.setContentInsetsAbsolute(0, 0);
 
         TextView dateTV = (TextView) getSupportActionBar().getCustomView().findViewById(R.id.headerTextView);
         dateTV.setText(MainActivity.convertDateString(startDay));
@@ -137,6 +133,10 @@ public class LoggerActivity extends AppCompatActivity {
             convertedStartHour = startHourInt - 12;
             startIsPM = true;
         }
+        if (startHourInt == 0) {
+            convertedStartHour = 12;
+            startIsPM = false;
+        }
         int convertedEndHour = endHourInt;
         if (endHourInt == 12) {
             endIsPM = true;
@@ -144,6 +144,10 @@ public class LoggerActivity extends AppCompatActivity {
         if (endHourInt > 12) {
             convertedEndHour = endHourInt - 12;
             endIsPM = true;
+        }
+        if (endHourInt == 0) {
+            convertedEndHour = 12;
+            endIsPM = false;
         }
 
         startTime.setText(String.format(locale, "%2d:%02d", convertedStartHour, startMinutesInt));
@@ -171,9 +175,10 @@ public class LoggerActivity extends AppCompatActivity {
                     startAMPM.setText(R.string.pm);
                 } else if (hourOfDay == 12) {
                     startAMPM.setText(R.string.pm);
-                }
-
-                else {
+                } else if (hourOfDay == 0) {
+                    endAMPM.setText(R.string.am);
+                    hourOfDay = 12;
+                } else {
                     startAMPM.setText(R.string.am);
                 }
 
@@ -209,6 +214,9 @@ public class LoggerActivity extends AppCompatActivity {
                 } else if (hourOfDay == 12) {
                     endAMPM.setText(R.string.pm);
 
+                } else if (hourOfDay == 0) {
+                    endAMPM.setText(R.string.am);
+                    hourOfDay = 12;
                 } else {
                     endAMPM.setText(R.string.am);
                 }
@@ -316,7 +324,7 @@ public class LoggerActivity extends AppCompatActivity {
             });
             builder.setMessage("End time must be later than start time!");
             builder.show();
-            saveButton.setVisibility(View.GONE);
+            saveButton.setVisibility(View.INVISIBLE);
         } else {
             saveButton.setVisibility(View.VISIBLE);
         }
