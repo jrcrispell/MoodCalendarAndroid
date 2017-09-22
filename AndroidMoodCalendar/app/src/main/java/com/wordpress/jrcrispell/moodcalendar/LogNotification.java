@@ -8,9 +8,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -44,6 +46,7 @@ public class LogNotification extends IntentService {
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        double currentTime = ((double)calendar.get(Calendar.MINUTE)/60) + ((double)currentHour);
 
         // Find previous hour, account for midnight
         int prevHour;
@@ -83,8 +86,20 @@ public class LogNotification extends IntentService {
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), notificationPendingIntent);
 
+        boolean withinNotificationHours = false;
 
-        if (!prevHourLogged) {
+        // Check preferences to figure out if we should show notification
+        SharedPreferences dPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        double startPref = Double.parseDouble(dPrefs.getString(SettingsFragment.NOTIFICATIONS_START_VALUE, "8.00"));
+        double endPref = Double.parseDouble(dPrefs.getString(SettingsFragment.NOTIFICATIONS_END_VALUE, "23.00"));
+
+        if (currentTime >= startPref && currentTime <= endPref) {
+            withinNotificationHours = true;
+        }
+
+        // Send notification
+        if (!prevHourLogged && withinNotificationHours) {
             // Build notification
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
             builder.setSmallIcon(R.drawable.ic_assignment_white_24dp);
