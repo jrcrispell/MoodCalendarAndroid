@@ -164,7 +164,7 @@ public class DayCalendarView extends View {
         }
 
         // Draggable handles
-        for (Double yLoc : listener.getDraggableYLocs()) {
+        for (Float yLoc : listener.getDraggableYLocs()) {
 
             int middle = (eventRectangles.get(0).right - eventRectangles.get(0).left) / 2;
 

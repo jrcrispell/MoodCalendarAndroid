@@ -43,7 +43,7 @@ public class DayCalendarFragment extends Fragment {
     ScrollView scrollView;
     int handleSelected = -1;
 
-    ArrayList<Double> draggableYLocs;
+    ArrayList<Float> draggableYLocs;
 
     int handleHitBox = DayCalendarView.hourVerticalPoints/4;
 
@@ -52,8 +52,8 @@ public class DayCalendarFragment extends Fragment {
         void openLoggerActivity(Intent intent);
         ArrayList<CalendarEvent> getDaysEvents();
         void setDaysEvents(ArrayList<CalendarEvent> daysEvents);
-        ArrayList<Double> getDraggableYLocs();
-        void setDraggableYLocs(ArrayList<Double> draggableYLocs);
+        ArrayList<Float> getDraggableYLocs();
+        void setDraggableYLocs(ArrayList<Float> draggableYLocs);
         void refreshView();
     }
 
@@ -92,6 +92,8 @@ public class DayCalendarFragment extends Fragment {
 
         listener.setDaysEvents(eventDBHelper.getDaysEvents(todaysDateString));
 
+
+
         // Calendar touch event
         final DayCalendarView dayCalendarView = new DayCalendarView(getActivity());
         dayCalendarView.setOnTouchListener(new View.OnTouchListener() {
@@ -101,9 +103,23 @@ public class DayCalendarFragment extends Fragment {
                 int action = event.getAction();
 
                 if (editMode) {
+
+                    if (handleSelected > -1) {
+                        if (action == MotionEvent.ACTION_MOVE) {
+                            Log.d(TAG, "onTouch: MOVING HANDLE" + action);
+                            draggableYLocs.set(handleSelected, event.getY());
+                            listener.setDraggableYLocs(draggableYLocs);
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            v.invalidate();
+                            return true;
+                        }
+                    }
+
+
+
                     if (action == MotionEvent.ACTION_DOWN) {
-                        double topHandleY = draggableYLocs.get(0);
-                        double bottomHandleY = draggableYLocs.get(1);
+                        float topHandleY = draggableYLocs.get(0);
+                        float bottomHandleY = draggableYLocs.get(1);
                         float actionY = event.getY();
                         if (actionY > topHandleY - handleHitBox && actionY < topHandleY + handleHitBox) {
                             Log.d(TAG, "onTouch: top handle grabbed");
@@ -111,21 +127,20 @@ public class DayCalendarFragment extends Fragment {
                             return true;
                         }
                         else if (actionY > bottomHandleY - handleHitBox && actionY < bottomHandleY + handleHitBox) {
+                            Log.d(TAG, "onTouch: bot handle grabbed");
                             handleSelected = 1;
                         }
                     }
                 }
 
                 DayCalendarView dcView = (DayCalendarView) v;
-                Log.d(TAG, "onTouch action " + Integer.toString(event.getAction()));
-
 
                 if (event.getAction() != 1 || event.getX() < dcView.hourLabelXStart) {
+                    Log.d(TAG, "onTouch action returning - " + Integer.toString(event.getAction()));
+
                     return false;
+
                 }
-
-
-
 
                 hourVerticalPoints = dayCalendarView.hourVerticalPoints;
                 hourLineTopPadding = dayCalendarView.hourLineTopPadding;
@@ -136,6 +151,7 @@ public class DayCalendarFragment extends Fragment {
                     if (editMode) {
                         Toast.makeText(getActivity(), "end edit mode", Toast.LENGTH_SHORT).show();
                         endEditingMode(v);
+                        Log.d(TAG, "end edit mode");
                         return true;
                     }
 
@@ -163,22 +179,27 @@ public class DayCalendarFragment extends Fragment {
                     return true;
                 }
                 // Handle long click
-                else {
+                else if (handleSelected == -1) {
                     longClickDetected = false;
+                    Log.d(TAG, "handling long click");
+
 
                     for (int i=0; i < listener.getDaysEvents().size(); i++) {
 
                         CalendarEvent calendarEvent = listener.getDaysEvents().get(i);
 
                         double eventStartLocation = timeToYLocation(calendarEvent.getStartTime());
+                        float eventStartFloat = (float) eventStartLocation;
                         double eventEndLocation = timeToYLocation(calendarEvent.getStartTime() + calendarEvent.getDuration());
+                        float eventEndFloat = (float) eventEndLocation;
 
                         if (event.getY() > eventStartLocation && event.getY() < eventEndLocation) {
-                            beginEditingMode(calendarEvent, eventStartLocation, eventEndLocation, v);
+                            beginEditingMode(calendarEvent, eventStartFloat, eventEndFloat, v);
                             return true;
                         }
                     }
                 }
+                Log.d(TAG, "handling long click returning false");
 
                 return false;
 
@@ -191,44 +212,18 @@ public class DayCalendarFragment extends Fragment {
             @Override
             public boolean onLongClick(View v) {
 
-
+                Log.d(TAG, "long click detected");
 
                 longClickDetected = true;
                 editMode = true;
-                return true;
-            }
-        });
-
-        dayCalendarView.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View view, DragEvent dragEvent) {
-                if (!editMode) {
-                    return false;
-                }
-                switch (dragEvent.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        Log.d(TAG, "started ");
-                        break;
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        Log.d(TAG, "entered");
-                        break;
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                        Log.d(TAG, "location");
-                        break;
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        Log.d(TAG, "ended");
-                        break;
-                    case DragEvent.ACTION_DROP:
-                        Log.d(TAG, "drop");
-                }
-                    return true;
+                return false;
             }
         });
 
         return dayCalendarView;
     }
 
-    private void beginEditingMode(CalendarEvent calendarEvent, double eventStartLocation, double eventEndLocation, View v) {
+    private void beginEditingMode(CalendarEvent calendarEvent, float eventStartLocation, float eventEndLocation, View v) {
         editingEvent = calendarEvent;
         Toast.makeText(getActivity(), "Editing event", Toast.LENGTH_SHORT).show();
 
@@ -252,10 +247,11 @@ public class DayCalendarFragment extends Fragment {
     private void endEditingMode(View v) {
         editMode = false;
         editingEvent.setBeingEdited(false);
-        listener.setDraggableYLocs(new ArrayList<Double>());
+        listener.setDraggableYLocs(new ArrayList<Float>());
         v.invalidate();
 
         scrollView.setOnTouchListener(null);
+
 
         //TODO - save
     }
@@ -264,6 +260,7 @@ public class DayCalendarFragment extends Fragment {
         double result = hourLineTopPadding + time * hourVerticalPoints;
         return result;
     }
+
 
     public double yLocationToTime(double yLocation) {
         return (yLocation - hourLineTopPadding) / hourVerticalPoints;

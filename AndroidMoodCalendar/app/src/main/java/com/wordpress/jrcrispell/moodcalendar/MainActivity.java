@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     ActionBar actionBar;
 
     ArrayList<CalendarEvent> daysEvents;
-    ArrayList<Double> draggableYLocs = new ArrayList<>();
+    ArrayList<Float> draggableYLocs = new ArrayList<>();
 
     private static final String TAG = "MainActivity";
     private static final String DEPRESSION_SCREEN_URL = "https://psychcentral.com/quizzes/depquiz.htm";
@@ -261,12 +261,12 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     }
 
     @Override
-    public ArrayList<Double> getDraggableYLocs() {
+    public ArrayList<Float> getDraggableYLocs() {
         return draggableYLocs;
     }
 
     @Override
-    public void setDraggableYLocs(ArrayList<Double> draggableYLocs) {
+    public void setDraggableYLocs(ArrayList<Float> draggableYLocs) {
         this.draggableYLocs = draggableYLocs;
     }
 
