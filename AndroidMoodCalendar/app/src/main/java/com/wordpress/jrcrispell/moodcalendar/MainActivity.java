@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
                 dialog.show();
 
 
-                //getFragmentManager().beginTransaction().replace(R.id.MonthPickerFragmentContainer, DatePickerFragment.newInstance()).commit();
             }
         });
 
@@ -290,11 +289,11 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
         calendar.setTimeInMillis(System.currentTimeMillis());
 
 
-        //calendar.add(Calendar.HOUR, 1);
-        //calendar.set(Calendar.MINUTE, 5);
+        calendar.add(Calendar.HOUR, 1);
+        calendar.set(Calendar.MINUTE, 5);
 
         // Comment out above two lines then un-comment next line to test notifications
-        calendar.set(Calendar.SECOND, 5);
+        //calendar.set(Calendar.SECOND, 5);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 

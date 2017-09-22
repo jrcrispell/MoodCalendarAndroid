@@ -24,7 +24,7 @@ public class DayCalendarView extends View {
     private Paint borderPaint;
 
     int hourLineXStart = 170;
-    int hourVerticalPoints = 120;
+    static int hourVerticalPoints = 120;
     int hourLineXEnd = 1200;
     int hourLineHeight = 5;
     int hourLineTopPadding = 50;
@@ -51,7 +51,14 @@ public class DayCalendarView extends View {
         if (context instanceof DayCalendarFragment.DayCalendarFragmentListener) {
             listener = (DayCalendarFragment.DayCalendarFragmentListener) context;
         }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
         handle = BitmapFactory.decodeResource(getResources(), R.drawable.handle2);
+
     }
 
     public void drawCalendar() {
@@ -247,12 +254,4 @@ public class DayCalendarView extends View {
 //        setMeasuredDimension(width, height);
     }
 
-    public void makeDraggable() {
-
-    }
-
-    @Override
-    public boolean onDragEvent(DragEvent event) {
-        return super.onDragEvent(event);
-    }
 }
