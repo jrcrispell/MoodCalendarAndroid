@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -80,9 +81,11 @@ public class LoggerActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
-        //getSupportActionBar().setHomeButtonEnabled(true);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setCustomView(R.layout.logger_action_bar);
+        Toolbar parent = (Toolbar) getSupportActionBar().getCustomView().getParent();
+        parent.setPadding(0,0,0,0);
+        parent.setContentInsetsAbsolute(0,0);
+
         TextView dateTV = (TextView) getSupportActionBar().getCustomView().findViewById(R.id.headerTextView);
         dateTV.setText(MainActivity.convertDateString(startDay));
 
@@ -108,7 +111,6 @@ public class LoggerActivity extends AppCompatActivity {
 
         if (editingExisting) {
 
-            //TODO check am or pm
             editingId = extras.getInt("eventID");
             deleteButton.setVisibility(View.VISIBLE);
 
@@ -143,7 +145,6 @@ public class LoggerActivity extends AppCompatActivity {
             convertedEndHour = endHourInt - 12;
             endIsPM = true;
         }
-        //TODO - (low priority) handle midnight as end time (or handle cross-day events)
 
         startTime.setText(String.format(locale, "%2d:%02d", convertedStartHour, startMinutesInt));
         endTime.setText(String.format(locale, "%2d:%02d", convertedEndHour, endMinutesInt));

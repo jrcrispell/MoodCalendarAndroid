@@ -15,6 +15,9 @@ import java.util.Locale;
 
 public class SettingsFragment extends PreferenceFragment {
 
+    //TODO - resize actionbar buttons
+    //TODO - change icons on notification
+
     public static final String NOTIFICATIONS_START_SUMMARY = "com.wordpress.jrcrispell.moodcalendar.notifications_start_summary";
     public static final String NOTIFICATIONS_START_VALUE = "com.wordpress.jrcrispell.moodcalendar.notifications_start";
     public static final String NOTIFICATIONS_START_HOUR = "com.wordpress.jrcrispell.moodcalendar.notifications_start_hour";
@@ -27,8 +30,10 @@ public class SettingsFragment extends PreferenceFragment {
     public static final String SCREEN_LAST_TAKEN = "com.wordpress.jrcrispell.moodcalendar.screen_last_taken";
     public static final String SCREEN_INTERVAL = "com.wordpress.jrcrispell.moodcalendar.depression_screen_days";
 
-
-
+    int startHourPicker;
+    int startMinutesPicker;
+    int endHourPicker;
+    int endMinutesPicker;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -56,6 +61,9 @@ public class SettingsFragment extends PreferenceFragment {
 
         addPreferencesFromResource(R.xml.prefs_screen);
 
+        startHourPicker = dPrefs.getInt(NOTIFICATIONS_START_HOUR, 8);
+        startMinutesPicker = dPrefs.getInt(NOTIFICATIONS_START_MINUTES, 0);
+
 
         // Date Picker Logic
         final Preference startTime = findPreference(NOTIFICATIONS_START_VALUE);
@@ -67,8 +75,7 @@ public class SettingsFragment extends PreferenceFragment {
         startTime.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                int startHour = dPrefs.getInt(NOTIFICATIONS_START_HOUR, 8);
-                int startMinutes = dPrefs.getInt(NOTIFICATIONS_START_MINUTES, 0);
+
                 TimePickerDialog dialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minutes) {
@@ -97,24 +104,28 @@ public class SettingsFragment extends PreferenceFragment {
                             builder.append(" PM");
                         }
                         startTime.setSummary(builder.toString());
+                        startHourPicker = hour;
+                        startMinutesPicker = minutes;
+
                         editor.putString(NOTIFICATIONS_START_SUMMARY, builder.toString());
                         editor.putInt(NOTIFICATIONS_START_HOUR, hour);
                         editor.putInt(NOTIFICATIONS_START_MINUTES, minutes);
                     }
-                }, startHour, startMinutes, false);
+                }, startHourPicker, startMinutesPicker, false);
                 dialog.show();
                 return true;
             }
         });
 
         final Preference endTime = findPreference(NOTIFICATIONS_END_VALUE);
+        endHourPicker = dPrefs.getInt(NOTIFICATIONS_END_HOUR, 23);
+        endMinutesPicker = dPrefs.getInt(NOTIFICATIONS_END_MINUTES, 0);
         endTime.setSummary(endSummary);
 
         endTime.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                int endHour = dPrefs.getInt(NOTIFICATIONS_END_HOUR, 23);
-                int endMinutes = dPrefs.getInt(NOTIFICATIONS_END_MINUTES, 0);
+
 
                 TimePickerDialog dialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -142,11 +153,13 @@ public class SettingsFragment extends PreferenceFragment {
                             builder.append(" PM");
                         }
                         endTime.setSummary(builder.toString());
+                        endHourPicker = hour;
+                        endMinutesPicker = minutes;
                         editor.putString(NOTIFICATIONS_END_SUMMARY, builder.toString());
                         editor.putInt(NOTIFICATIONS_END_HOUR, hour);
                         editor.putInt(NOTIFICATIONS_END_MINUTES, minutes);
                     }
-                }, endHour, endMinutes, false );
+                }, endHourPicker, endMinutesPicker, false );
                 dialog.show();
                 return true;
             }
