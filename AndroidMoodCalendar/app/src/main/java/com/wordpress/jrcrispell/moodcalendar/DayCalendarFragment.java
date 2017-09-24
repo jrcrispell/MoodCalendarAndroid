@@ -92,8 +92,6 @@ public class DayCalendarFragment extends Fragment {
 
         listener.setDaysEvents(eventDBHelper.getDaysEvents(todaysDateString));
 
-
-
         // Calendar touch event
         final DayCalendarView dayCalendarView = new DayCalendarView(getActivity());
         dayCalendarView.setOnTouchListener(new View.OnTouchListener() {
@@ -109,6 +107,54 @@ public class DayCalendarFragment extends Fragment {
                             Log.d(TAG, "onTouch: MOVING HANDLE" + action);
                             draggableYLocs.set(handleSelected, event.getY());
                             listener.setDraggableYLocs(draggableYLocs);
+
+                            // Top handle
+                            if (handleSelected == 0) {
+                                double originalStartTime = editingEvent.getStartTime();
+                                double originalDuration = editingEvent.getDuration();
+                                Log.d(TAG, "original start: " + originalStartTime);
+                                Log.d(TAG, "onTouch: original duration: " + editingEvent.getDuration());
+
+                                editingEvent.setStartTime(yLocationToTime(event.getY()));
+                                double timeDifference = originalStartTime - editingEvent.getStartTime();
+                                double originalEnd = originalStartTime + editingEvent.getDuration();
+                                editingEvent.setDuration(editingEvent.getDuration() + timeDifference);
+
+                                // Prevent start time/end time flipping
+                                if (editingEvent.getStartTime() > originalEnd) {
+                                    editingEvent.setStartTime(originalEnd - 0.1);
+                                    editingEvent.setDuration(0.1);
+
+                                    // hide handle
+                                    draggableYLocs.set(handleSelected, -1000.0f);
+
+                                }
+
+                                Log.d(TAG, "onTouch: difference: " + timeDifference);
+
+
+                                Log.d(TAG, "onTouch: new duration: " + editingEvent.getDuration());
+
+                                eventDBHelper.editEvent(editingEvent, editingEvent.getDbEventID());
+                            }
+                            else if (handleSelected == 1) {
+                                double originalStartTime = editingEvent.getStartTime();
+                                Log.d(TAG, "original start: " + originalStartTime);
+                                Log.d(TAG, "onTouch: original duration: " + editingEvent.getDuration());
+                                double newEnd = yLocationToTime(event.getY());
+                                Log.d(TAG, "onTouch: newEnd: " + newEnd);
+
+                                double newDuration = newEnd - editingEvent.getStartTime();
+
+                                if (newDuration < 0) {
+                                    newDuration = 0.1;
+                                    draggableYLocs.set(handleSelected, -1000.0f);
+                                }
+
+                                editingEvent.setDuration(newDuration);
+                                eventDBHelper.editEvent(editingEvent, editingEvent.getDbEventID());
+                            }
+
                             v.getParent().requestDisallowInterceptTouchEvent(true);
                             v.invalidate();
                             return true;
@@ -178,6 +224,7 @@ public class DayCalendarFragment extends Fragment {
                     listener.openLoggerActivity(intent);
                     return true;
                 }
+
                 // Handle long click
                 else if (handleSelected == -1) {
                     longClickDetected = false;
@@ -188,18 +235,17 @@ public class DayCalendarFragment extends Fragment {
 
                         CalendarEvent calendarEvent = listener.getDaysEvents().get(i);
 
-                        double eventStartLocation = timeToYLocation(calendarEvent.getStartTime());
-                        float eventStartFloat = (float) eventStartLocation;
-                        double eventEndLocation = timeToYLocation(calendarEvent.getStartTime() + calendarEvent.getDuration());
-                        float eventEndFloat = (float) eventEndLocation;
+                        float eventStartLocation = timeToYLocation(calendarEvent.getStartTime());
+                        float eventEndLocation = timeToYLocation(calendarEvent.getStartTime() + calendarEvent.getDuration());
 
                         if (event.getY() > eventStartLocation && event.getY() < eventEndLocation) {
-                            beginEditingMode(calendarEvent, eventStartFloat, eventEndFloat, v);
+                            beginEditingMode(calendarEvent, eventStartLocation, eventEndLocation, v);
                             return true;
                         }
                     }
                 }
                 Log.d(TAG, "handling long click returning false");
+                endEditingMode(v);
 
                 return false;
 
@@ -232,6 +278,7 @@ public class DayCalendarFragment extends Fragment {
         draggableYLocs.add(eventEndLocation);
         listener.setDraggableYLocs(draggableYLocs);
 
+
         editingEvent.setBeingEdited(true);
 
         scrollView.setOnTouchListener(new View.OnTouchListener() {
@@ -248,6 +295,7 @@ public class DayCalendarFragment extends Fragment {
         editMode = false;
         editingEvent.setBeingEdited(false);
         listener.setDraggableYLocs(new ArrayList<Float>());
+        handleSelected = -1;
         v.invalidate();
 
         scrollView.setOnTouchListener(null);
@@ -256,13 +304,13 @@ public class DayCalendarFragment extends Fragment {
         //TODO - save
     }
 
-    public double timeToYLocation(double time) {
-        double result = hourLineTopPadding + time * hourVerticalPoints;
-        return result;
+    public float timeToYLocation(double time) {
+        float timeFloat = (float) time;
+        return hourLineTopPadding + timeFloat * hourVerticalPoints;
     }
 
 
-    public double yLocationToTime(double yLocation) {
+    public double yLocationToTime(float yLocation) {
         return (yLocation - hourLineTopPadding) / hourVerticalPoints;
     }
 
