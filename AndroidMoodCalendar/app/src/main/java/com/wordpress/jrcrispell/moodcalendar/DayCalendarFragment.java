@@ -3,23 +3,17 @@ package com.wordpress.jrcrispell.moodcalendar;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-
 
 public class DayCalendarFragment extends Fragment {
 
@@ -291,17 +285,16 @@ public class DayCalendarFragment extends Fragment {
         v.invalidate();
     }
 
+
     private void endEditingMode(View v) {
         editMode = false;
         editingEvent.setBeingEdited(false);
         listener.setDraggableYLocs(new ArrayList<Float>());
         handleSelected = -1;
-        v.invalidate();
-
         scrollView.setOnTouchListener(null);
 
+        v.invalidate();
 
-        //TODO - save
     }
 
     public float timeToYLocation(double time) {
