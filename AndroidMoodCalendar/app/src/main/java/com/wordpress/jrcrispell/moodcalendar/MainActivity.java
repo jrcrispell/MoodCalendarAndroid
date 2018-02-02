@@ -47,6 +47,13 @@ public class MainActivity extends AppCompatActivity implements DayCalendarFragme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        //TODO - crash - trying to long press between 11:00 AM and noon
+        // have all activities from midnight to 11 logged
+
+        //TODO - bug - long event descriptions clash with mood score
+
+        //TODO - placeholder when no entries exist
+
         // Get today's date
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             locale = getResources().getConfiguration().getLocales().get(0);

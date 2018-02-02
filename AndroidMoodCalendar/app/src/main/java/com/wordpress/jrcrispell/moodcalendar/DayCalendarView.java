@@ -61,6 +61,11 @@ public class DayCalendarView extends View {
 
     }
 
+    @Override
+    public boolean performClick() {
+        return super.performClick();
+    }
+
     public void drawCalendar() {
 
         eventRectangles = new ArrayList<>();
